@@ -1,0 +1,38 @@
+.header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	text-align: center;
+	color: #34393c;
+}
+
+.mainTitle {
+	font-size: 80px;
+}
+
+.middleSec {
+	display: grid;
+	grid-template-columns: repeat(
+		auto-fit,
+		minmax(15vw, 1fr)
+	); /* Adjust the column width as needed */
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	color: #34393c;
+	padding: 100px;
+	background-color: #fdf7e9;
+	grid-gap: 20px; /* Adjust the gap between grid items */
+}
+
+.secCom {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.grid_item {
+	max-width: 12rem;
+	max-height: 10rem;
+}

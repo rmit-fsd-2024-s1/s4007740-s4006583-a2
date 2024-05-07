@@ -1,0 +1,42 @@
+.wrapper {
+	width: calc(80% - 80px);
+	position: relative;
+	display: flex;
+	margin: 0 auto;
+	align-items: center;
+	justify-content: center;
+	scroll-behavior: smooth;
+	padding-bottom: 5rem;
+}
+
+.carousel {
+	display: flex;
+	white-space: nowrap;
+	overflow: hidden;
+	position: relative;
+}
+
+.carousel_item {
+	margin-left: 2rem;
+}
+
+.wrapper svg {
+	height: 40px;
+	width: 40px;
+	font-size: 1rem;
+	text-align: center;
+	line-height: 40px;
+	border-radius: 50%;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+
+.bi-arrow-left {
+	left: 0;
+}
+
+.bi-arrow-right {
+	right: 0;
+}

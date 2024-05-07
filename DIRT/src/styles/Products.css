@@ -1,0 +1,27 @@
+.prodTitle {
+	text-align: center;
+	margin: 1rem;
+}
+.selection {
+	display: flex;
+	margin-top: 2rem;
+}
+
+.selection li {
+	display: inline-block; /* Display list items inline */
+	margin-right: 2rem;
+}
+
+.checkbox {
+	min-height: 2rem;
+	min-width: 2rem;
+}
+
+.checkbox + label {
+	font-size: 2rem; /* Change the font size of the text */
+	display: inline-block; /* Keep the text next to the checkbox */
+}
+
+.largeBody {
+	padding-top: 2rem;
+}

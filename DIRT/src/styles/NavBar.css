@@ -1,0 +1,100 @@
+.active {
+	background-color: #c1c3c3;
+}
+.navbar {
+	justify-content: space-between;
+	background-color: #f3f3f3;
+	max-height: 5rem;
+}
+
+.container-left {
+	display: inherit;
+	align-items: center;
+}
+
+.container-right {
+	display: inherit;
+	align-items: center;
+}
+
+nav button {
+	background-color: #f3f3f3;
+	border: none;
+}
+nav .title {
+	float: left;
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #34393c;
+	margin: 1rem;
+	margin-top: 0;
+	text-decoration: none;
+	width: 10%;
+	align-items: center;
+}
+nav ul {
+	display: flex;
+	justify-content: space-between;
+	/* Centers the ul items vertically */
+	height: 100%;
+	margin-bottom: 0;
+}
+nav ul li {
+	list-style: none;
+}
+nav ul li a {
+	text-align: center;
+	display: block;
+	text-decoration: none;
+	margin: 0;
+	color: #34393c;
+	transition: background-color 0.3s;
+	border-radius: 5px;
+}
+nav ul li a:hover {
+	background-color: #c1c3c3; /* Changing background color on hover */
+}
+
+.navIcons {
+	max-height: 2.5rem;
+}
+
+.dropdown-link:hover {
+	background-color: #c1c3c3;
+}
+
+.dropdown-width {
+	min-width: 10rem;
+	margin-top: 0;
+}
+
+.dropdown-item {
+	margin: 0;
+}
+
+.dropdown-item:hover {
+	background-color: #c1c3c3;
+}
+.cart {
+	max-height: 3rem;
+	object-fit: cover;
+}
+
+.navCart {
+	display: flex;
+	margin-top: 0;
+}
+
+.quantity {
+	position: absolute; /* Position the quantity absolutely */
+	text-align: center;
+	top: 3rem; /* Adjust the top position to place it over the cart */
+	right: 1.5rem; /* Adjust the right position to place it over the cart */
+	background-color: green; /* Add a background color for visibility */
+	color: white; /* Add text color */
+	border-radius: 50%; /* Make it round */
+	padding: 5px; /* Adjust padding as needed */
+	font-size: 12px; /* Adjust font size as needed */
+	z-index: 1; /* Ensure it's displayed above the cart icon */
+	height: 1.5rem; /* Adjust height as needed */
+}

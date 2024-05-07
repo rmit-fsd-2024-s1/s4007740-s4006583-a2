@@ -1,0 +1,29 @@
+.footer {
+	transition-duration: 0.25s;
+
+	background-color: #f3f3f3;
+
+	display: flex;
+	justify-content: space-between; /* Align items at the start and end of the flex container */
+	align-items: center; /* Center items vertically */
+	width: 100%;
+	padding-left: 10vw;
+	padding-right: 10vw;
+	bottom: 0;
+}
+
+.footer .title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #34393c;
+	margin: 0.5rem;
+	text-decoration: none;
+	width: 10%;
+	align-items: center;
+}
+
+.footer .btn {
+	justify-content: right;
+	align-items: center;
+	height: 2.5rem;
+}

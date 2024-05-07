@@ -1,0 +1,84 @@
+.page {
+	text-align: center;
+	background-color: #fdf7e9;
+}
+
+.page h1 {
+	padding-top: 5rem;
+	padding-bottom: 2rem;
+	color: antiquewhite;
+}
+
+.intro {
+	line-height: 30px;
+	padding-bottom: 5rem;
+	color: antiquewhite;
+}
+.titlePoints {
+	padding-top: 2rem;
+}
+
+.points {
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.pointsLogo {
+	max-width: 8rem;
+}
+
+.soilSec {
+	padding-top: 2rem;
+	line-height: 30px;
+	padding-bottom: 5rem;
+	color: antiquewhite;
+	height: 40vh;
+}
+
+.seedText {
+	width: 40%;
+	padding-left: 10%;
+	padding-top: 5%;
+}
+
+.seedSec {
+	line-height: 30px;
+	display: flex;
+	justify-content: space-between;
+	height: 50vh;
+	object-fit: cover;
+}
+
+.saplingText {
+	width: 40%;
+	padding-top: 5%;
+	padding-right: 10%;
+}
+
+.saplingSec {
+	line-height: 30px;
+	display: flex;
+	justify-content: space-between;
+	height: 50vh;
+}
+
+.maintainText {
+	width: 40%;
+	padding-top: 5%;
+}
+
+.maintainSec {
+	line-height: 30px;
+	display: flex;
+	justify-content: space-between;
+	height: 50vh;
+}
+
+.page img {
+	object-fit: cover; /* This will make the image cover the entire container while maintaining its aspect ratio */
+	width: 100%; /* This will ensure the image fills its container horizontally */
+	height: 100%; /* This will ensure the image fills its container vertically */
+}
