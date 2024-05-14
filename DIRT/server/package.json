@@ -1,0 +1,26 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"description": "Node.js Rest Apis with Express, TypeORM & Cloud MySQL.",
+	"main": "server.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"nodejs",
+		"express",
+		"typeorm",
+		"mysql",
+		"rest",
+		"api"
+	],
+	"author": "s4006583",
+	"license": "ISC",
+	"dependencies": {
+		"argon2": "^0.40.1",
+		"cors": "^2.8.5",
+		"express": "^4.19.2",
+		"mysql2": "^3.9.7",
+		"typeorm": "^0.3.20"
+	}
+}
