@@ -16,9 +16,9 @@ db.user = require('./models/user.js')(db.sequelize, DataTypes);
 db.post = require('./models/item.js')(db.sequelize, DataTypes);
 
 // Relate post and user.
-db.post.belongsTo(db.user, {
-	foreignKey: { name: 'username', allowNull: false },
-});
+// db.post.belongsTo(db.user, {
+// 	foreignKey: { name: 'username', allowNull: false },
+// });
 
 // Learn more about associations here: https://sequelize.org/master/manual/assocs.html
 
@@ -44,8 +44,23 @@ async function seedData() {
 	// let hash = await argon2.hash("abc123", { type: argon2.argon2id });
 	// await db.user.create({ username: "mbolger", password_hash: hash, first_name: "Matthew", last_name : "Bolger" });
 
-	// hash = await argon2.hash("def456", { type: argon2.argon2id });
-	// await db.user.create({ username: "shekhar", password_hash: hash, first_name: "Shekhar", last_name : "Kalra" });
+	hash = await argon2.hash('s4006583', { type: argon2.argon2id });
+	await db.user.create({
+		id: 1,
+		username: 'Vika',
+		password_hash: hash,
+		email: 's4006583@student.rmit.edu.au',
+		is_admin: true,
+	});
+
+	hash = await argon2.hash('s4007740', { type: argon2.argon2id });
+	await db.user.create({
+		id: 2,
+		username: 'Ethan',
+		password_hash: hash,
+		email: 's4007740@student.rmit.edu.au',
+		is_admin: true,
+	});
 }
 
 module.exports = db;
