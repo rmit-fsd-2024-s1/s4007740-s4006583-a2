@@ -18,6 +18,20 @@ exports.one = async (req, res) => {
 // Create a user in the database.
 exports.create = async (req, res) => {
 	const item = await db.item.create({
+		id: req.body.id,
+		name: req.body.name,
+		desc: req.body.desc,
+		cost: req.body.cost,
+		cat: req.body.cat,
+		special: req.body.special,
+	});
+
+	res.json(item);
+};
+
+exports.upsert = async (req, res) => {
+	const item = await db.item.upsert({
+		id: req.body.id,
 		name: req.body.name,
 		desc: req.body.desc,
 		cost: req.body.cost,

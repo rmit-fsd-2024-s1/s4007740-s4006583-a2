@@ -59,14 +59,14 @@ async function seedData() {
 		admin: true,
 	});
 
-	// await db.item.create({
-	// 	id: 1,
-	// 	name: 'watermelon',
-	// 	desc: 'Red watermelon cut quater',
-	// 	cost: 4.84,
-	// 	cat: 'fruit',
-	// 	special: true,
-	// });
+	await db.item.upsert({
+		id: 1,
+		name: 'watermelon',
+		desc: 'Red watermelon cut quarter',
+		cost: 4.95,
+		cat: 'fruit',
+		special: true,
+	});
 }
 
 module.exports = db;

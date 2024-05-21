@@ -11,6 +11,9 @@ module.exports = (express, app) => {
 	// Create a new post.
 	router.post('/', controller.create);
 
+	// Update an existing item or add item if one doesn't exist
+	router.post('/', controller.upsert);
+
 	// Add routes to server.
 	app.use('/api/items', router);
 };
