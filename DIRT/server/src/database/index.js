@@ -13,7 +13,7 @@ db.sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
 
 // Include models.
 db.user = require('./models/user.js')(db.sequelize, DataTypes);
-db.post = require('./models/item.js')(db.sequelize, DataTypes);
+db.item = require('./models/item.js')(db.sequelize, DataTypes);
 
 // Relate post and user.
 // db.post.belongsTo(db.user, {
@@ -37,12 +37,12 @@ async function seedData() {
 	const count = await db.user.count();
 
 	// Only seed data if necessary.
-	if (count > 0) return;
+	// if (count > 0) return;
 
 	const argon2 = require('argon2');
 
 	hash = await argon2.hash('s4006583', { type: argon2.argon2id });
-	await db.user.create({
+	await db.user.upsert({
 		id: 1,
 		username: 'Vika',
 		password_hash: hash,
@@ -51,7 +51,7 @@ async function seedData() {
 	});
 
 	hash = await argon2.hash('s4007740', { type: argon2.argon2id });
-	await db.user.create({
+	await db.user.upsert({
 		id: 2,
 		username: 'Ethan',
 		password_hash: hash,
@@ -59,14 +59,14 @@ async function seedData() {
 		admin: true,
 	});
 
-	await db.item.create({
-		id: 1,
-		name: 'watermelon',
-		desc: 'Red watermelon cut quater',
-		cost: 4.84,
-		cat: 'fruit',
-		special: true,
-	});
+	// await db.item.create({
+	// 	id: 1,
+	// 	name: 'watermelon',
+	// 	desc: 'Red watermelon cut quater',
+	// 	cost: 4.84,
+	// 	cat: 'fruit',
+	// 	special: true,
+	// });
 }
 
 module.exports = db;

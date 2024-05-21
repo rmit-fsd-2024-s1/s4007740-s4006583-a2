@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) =>
 			},
 			username: {
 				type: DataTypes.STRING(32),
-				primaryKey: true,
+				primaryKey: false,
 			},
 			password_hash: {
 				type: DataTypes.STRING(200),
