@@ -41,16 +41,13 @@ async function seedData() {
 
 	const argon2 = require('argon2');
 
-	// let hash = await argon2.hash("abc123", { type: argon2.argon2id });
-	// await db.user.create({ username: "mbolger", password_hash: hash, first_name: "Matthew", last_name : "Bolger" });
-
 	hash = await argon2.hash('s4006583', { type: argon2.argon2id });
 	await db.user.create({
 		id: 1,
 		username: 'Vika',
 		password_hash: hash,
 		email: 's4006583@student.rmit.edu.au',
-		is_admin: true,
+		admin: true,
 	});
 
 	hash = await argon2.hash('s4007740', { type: argon2.argon2id });
@@ -59,7 +56,16 @@ async function seedData() {
 		username: 'Ethan',
 		password_hash: hash,
 		email: 's4007740@student.rmit.edu.au',
-		is_admin: true,
+		admin: true,
+	});
+
+	await db.item.create({
+		id: 1,
+		name: 'watermelon',
+		desc: 'Red watermelon cut quater',
+		cost: 4.84,
+		cat: 'fruit',
+		special: true,
 	});
 }
 

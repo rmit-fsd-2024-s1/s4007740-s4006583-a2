@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) =>
 			profile_Img: {
 				type: DataTypes.STRING(40),
 			},
-			is_admin: {
+			admin: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
 			},
