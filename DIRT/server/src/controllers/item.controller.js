@@ -1,0 +1,29 @@
+const db = require('../database');
+const argon2 = require('argon2');
+
+// Select all items from the database.
+exports.all = async (req, res) => {
+	const items = await db.item.findAll();
+
+	res.json(items);
+};
+
+// Select one user from the database.
+exports.one = async (req, res) => {
+	const item = await db.item.findByPk(req.params.id);
+
+	res.json(item);
+};
+
+// Create a user in the database.
+exports.create = async (req, res) => {
+	const item = await db.item.create({
+		name: req.body.name,
+		desc: req.body.desc,
+		cost: req.body.cost,
+		cat: req.body.cat,
+		special: req.body.special,
+	});
+
+	res.json(item);
+};

@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) =>
 			},
 			name: {
 				type: DataTypes.STRING(32),
-				primaryKey: true,
+				primaryKey: false,
 			},
 			desc: {
 				type: DataTypes.STRING(200),
