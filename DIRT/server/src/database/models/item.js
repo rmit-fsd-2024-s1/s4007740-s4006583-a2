@@ -1,32 +1,28 @@
 module.exports = (sequelize, DataTypes) =>
 	sequelize.define(
-		'user',
+		'item',
 		{
 			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
 			},
-			username: {
+			name: {
 				type: DataTypes.STRING(32),
 				primaryKey: true,
 			},
-			password_hash: {
+			desc: {
 				type: DataTypes.STRING(200),
 				allowNull: false,
 			},
-			email: {
+			cost: {
+				type: DataTypes.FLOAT,
+				allowNull: false,
+			},
+			cat: {
 				type: DataTypes.STRING(40),
 				allowNull: false,
 			},
-			doj: {
-				type: DataTypes.STRING(40),
-				allowNull: false,
-			},
-			profile_Img: {
-				type: DataTypes.STRING(40),
-				allowNull: false,
-			},
-			is_admin: {
+			special: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
 			},
