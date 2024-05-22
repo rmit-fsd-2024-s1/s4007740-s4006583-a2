@@ -1,5 +1,6 @@
 import { CSSProperties, useState } from 'react';
 import '../styles/LoginForm.css';
+import UserDataService from '../data/UserService';
 import CloseButton from './CloseButton';
 import Popup from './Popup';
 import {
@@ -61,7 +62,16 @@ export default function SignUpForm({
 			return;
 		}
 
-		addUser(fields.name, crypto.randomUUID(), fields.username, fields.password);
+		// addUser(fields.name, crypto.randomUUID(), fields.username, fields.password);
+
+		UserDataService.create({
+			uuid: crypto.randomUUID(),
+			name: fields.name,
+			hash_password: fields.password,
+			email: fields.username,
+		}).catch((e) => {
+			console.log(e);
+		});
 
 		const verified = loginUser(fields.username, fields.password);
 

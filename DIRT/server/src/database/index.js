@@ -43,22 +43,10 @@ async function seedData() {
 
 	hash = await argon2.hash('s4006583', { type: argon2.argon2id });
 	await db.user.upsert({
-		id: 1,
 		uuid: '1',
-		username: 'Vika',
-		password_hash: hash,
+		name: 'Vika',
 		email: 's4006583@student.rmit.edu.au',
-		admin: true,
-	});
-
-	hash = await argon2.hash('s4007740', { type: argon2.argon2id });
-	await db.user.upsert({
-		id: 2,
-		uuid: '2',
-		username: 'Ethan',
 		password_hash: hash,
-		email: 's4007740@student.rmit.edu.au',
-		admin: true,
 	});
 
 	// await db.user.destroy({

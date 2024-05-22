@@ -35,10 +35,10 @@ exports.create = async (req, res) => {
 	const user = await db.user.create({
 		id: req.body.id,
 		uuid: req.body.uuid,
-		username: req.body.username,
+		name: req.body.name,
+		email: req.body.email,
 		password_hash: hash,
-		first_name: req.body.firstname,
-		last_name: req.body.lastname,
+		admin: false,
 	});
 
 	res.json(user);
@@ -50,10 +50,10 @@ exports.upsert = async (req, res) => {
 	const user = await db.user.upsert({
 		id: req.body.id,
 		uuid: req.body.uuid,
-		username: req.body.username,
+		name: req.body.name,
+		email: req.body.email,
 		password_hash: hash,
-		first_name: req.body.firstname,
-		last_name: req.body.lastname,
+		admin: false,
 	});
 
 	res.json(user);
