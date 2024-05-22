@@ -44,6 +44,7 @@ async function seedData() {
 	hash = await argon2.hash('s4006583', { type: argon2.argon2id });
 	await db.user.upsert({
 		id: 1,
+		uuid: '1',
 		username: 'Vika',
 		password_hash: hash,
 		email: 's4006583@student.rmit.edu.au',
@@ -53,11 +54,16 @@ async function seedData() {
 	hash = await argon2.hash('s4007740', { type: argon2.argon2id });
 	await db.user.upsert({
 		id: 2,
+		uuid: '2',
 		username: 'Ethan',
 		password_hash: hash,
 		email: 's4007740@student.rmit.edu.au',
 		admin: true,
 	});
+
+	// await db.user.destroy({
+	// 	where: { uuid: '2', password_hash: hash },
+	// });
 
 	await db.item.upsert({
 		id: 1,
@@ -67,6 +73,60 @@ async function seedData() {
 		cat: 'fruit',
 		special: true,
 	});
+
+	await db.item.bulkCreate(
+		[
+			{
+				id: 2,
+				name: 'apple',
+				desc: 'Red Apple',
+				cost: 5.0,
+				cat: 'fruit',
+				special: false,
+			},
+			{
+				id: 3,
+				name: 'apple',
+				desc: 'Red Apple',
+				cost: 5.0,
+				cat: 'fruit',
+				special: false,
+			},
+			{
+				id: 4,
+				name: 'apple',
+				desc: 'Red Apple',
+				cost: 5.0,
+				cat: 'fruit',
+				special: false,
+			},
+			{
+				id: 5,
+				name: 'apple',
+				desc: 'Red Apple',
+				cost: 5.0,
+				cat: 'fruit',
+				special: true,
+			},
+			{
+				id: 6,
+				name: 'apple',
+				desc: 'Red Apple',
+				cost: 5.0,
+				cat: 'fruit',
+				special: false,
+			},
+			{
+				id: 7,
+				name: 'apple',
+				desc: 'Green Apple',
+				cost: 5.0,
+				cat: 'fruit',
+				special: false,
+			},
+		],
+		{ updateOnDuplicate: ['name', 'cost', 'desc', 'cat', 'special'] }
+	);
 }
 
 module.exports = db;

@@ -34,6 +34,7 @@ exports.create = async (req, res) => {
 
 	const user = await db.user.create({
 		id: req.body.id,
+		uuid: req.body.uuid,
 		username: req.body.username,
 		password_hash: hash,
 		first_name: req.body.firstname,
@@ -48,10 +49,24 @@ exports.upsert = async (req, res) => {
 
 	const user = await db.user.upsert({
 		id: req.body.id,
+		uuid: req.body.uuid,
 		username: req.body.username,
 		password_hash: hash,
 		first_name: req.body.firstname,
 		last_name: req.body.lastname,
+	});
+
+	res.json(user);
+};
+
+exports.destroy = async (req, res) => {
+	const hash = await argon2.hash(req.body.password, { type: argon2.argon2d });
+
+	const user = await db.user.destroy({
+		where: {
+			uuid: req.body.uuid,
+			password_hash: hash,
+		},
 	});
 
 	res.json(user);
