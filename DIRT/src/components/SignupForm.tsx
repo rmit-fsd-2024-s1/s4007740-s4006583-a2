@@ -5,7 +5,6 @@ import CloseButton from './CloseButton';
 import Popup from './Popup';
 import {
 	loginUser,
-	addUser,
 	initUsers,
 	testEmail,
 	testPassword,
@@ -62,12 +61,10 @@ export default function SignUpForm({
 			return;
 		}
 
-		// addUser(fields.name, crypto.randomUUID(), fields.username, fields.password);
-
 		UserDataService.create({
 			uuid: crypto.randomUUID(),
 			name: fields.name,
-			hash_password: fields.password,
+			password: fields.password,
 			email: fields.username,
 		}).catch((e) => {
 			console.log(e);
@@ -104,10 +101,7 @@ export default function SignUpForm({
 					/>
 					<p>EMAIL</p>
 					{emailError && (
-						<p
-							className="error"
-							style={{ color: 'red' }}
-						>
+						<p className="error" style={{ color: 'red' }}>
 							{emailError}
 						</p>
 					)}
@@ -121,10 +115,7 @@ export default function SignUpForm({
 					/>
 					<p>PASSWORD</p>
 					{passwordError && (
-						<p
-							className="error"
-							style={{ color: 'red' }}
-						>
+						<p className="error" style={{ color: 'red' }}>
 							{passwordError}
 						</p>
 					)}

@@ -5,132 +5,20 @@ import { BrowserRouter } from 'react-router-dom';
 import { getSpecials, initSpecials } from '../data/repository';
 import ShopItem from '../components/ShopItem';
 import Footer from '../components/Footer';
+import ItemService from '../data/ItemService';
 
 export default function products() {
-	const product_list: {
-		item_name: string;
-		item_desc: string;
-		cost: number;
-		category: string;
-	}[] = [
-		{
-			item_name: 'apples',
-			item_desc: 'Pink Lady',
-			cost: 0.79,
-			category: 'fruit',
-		},
-		{
-			item_name: 'bananas',
-			item_desc: 'Cavendish ',
-			cost: 0.72,
-			category: 'fruit',
-		},
-		{ item_name: 'oranges', item_desc: 'Navel', cost: 1.78, category: 'fruit' },
-		{
-			item_name: 'strawberries',
-			item_desc: '250g Punnet',
-			cost: 4.0,
-			category: 'fruit',
-		},
-		{
-			item_name: 'watermelon',
-			item_desc: 'Red watermelon cut quarter',
-			cost: 4.84,
-			category: 'fruit',
-		},
-		{
-			item_name: 'kiwi',
-			item_desc: 'Kiwi Fruit Green',
-			cost: 0.79,
-			category: 'fruit',
-		},
-		{
-			item_name: 'grapes',
-			item_desc: 'White Seedless Grapes',
-			cost: 5.23,
-			category: 'fruit',
-		},
-		{
-			item_name: 'carrots',
-			item_desc: 'Fresh Carrots',
-			cost: 0.35,
-			category: 'veg',
-		},
-		{
-			item_name: 'capsicum',
-			item_desc: 'Red Capsicum',
-			cost: 2.38,
-			category: 'veg',
-		},
-		{
-			item_name: 'broccoli',
-			item_desc: 'Fresh Broccoli Crown',
-			cost: 2.15,
-			category: 'veg',
-		},
-		{
-			item_name: 'onion',
-			item_desc: 'Brown Onion',
-			cost: 0.59,
-			category: 'veg',
-		},
-		{
-			item_name: 'tomato',
-			item_desc: 'Fresh Tomato',
-			cost: 0.76,
-			category: 'veg',
-		},
-		{
-			item_name: 'potatoes',
-			item_desc: 'White Potato Washed',
-			cost: 0.81,
-			category: 'veg',
-		},
-		{
-			item_name: 'sage seeds',
-			item_desc: "Mr Fothergill's Sage Seeds",
-			cost: 4.88,
-			category: 'seeds',
-		},
-		{
-			item_name: 'parsley seeds',
-			item_desc: 'Garden Starters Parsel Curled',
-			cost: 1.29,
-			category: 'seeds',
-		},
-		{
-			item_name: 'thyme seeds',
-			item_desc: "Mr Fothergill's Thyme Seed Mat",
-			cost: 4.88,
-			category: 'seeds',
-		},
-		{
-			item_name: 'basil seeds',
-			item_desc: "Mr Fothergill's Basil Seed Mat",
-			cost: 4.88,
-			category: 'seeds',
-		},
-		{
-			item_name: 'tomato seeds',
-			item_desc: 'Johnsons Marmande Tomato Vegetable Seeds',
-			cost: 4.6,
-			category: 'seeds',
-		},
-		{
-			item_name: 'rocket seeds',
-			item_desc: "Mr Fothergill's Rocket Vegetable Seeds",
-			cost: 4.6,
-			category: 'seeds',
-		},
-		{
-			item_name: 'butternut pumkin seeds',
-			item_desc: "Mr Fothergill's Butternut Pumkin Vegetable Seeds",
-			cost: 3.2,
-			category: 'seeds',
-		},
-	];
-
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+	const [products, setProducts] = useState<
+		{
+			id: number;
+			name: string;
+			desc: string;
+			cat: string;
+			cost: number;
+			special: boolean;
+		}[]
+	>([]);
 
 	const handleFilter = (category: string) => {
 		setSelectedCategories((prevCategories) => {
@@ -144,12 +32,22 @@ export default function products() {
 		});
 	};
 
+	useEffect(() => {
+		async function loadProducts() {
+			const currProducts = await ItemService.getAll();
+
+			setProducts(currProducts);
+		}
+
+		loadProducts();
+	}, []);
+
 	const filteredProducts =
 		selectedCategories.length > 0
-			? product_list.filter((product) =>
-					selectedCategories.includes(product.category)
+			? ItemService.getAll().filter((products) =>
+					selectedCategories.includes(products.cat)
 			  )
-			: product_list;
+			: ItemService.getAll();
 
 	return (
 		<>
@@ -198,13 +96,13 @@ export default function products() {
 					justifyContent: 'center',
 				}}
 			>
-				{filteredProducts.map((product, index) => (
+				{products.map((product, index) => (
 					<ShopItem
-						key={index}
-						item_name={product.item_name}
-						item_desc={product.item_desc}
+						key={product.id}
+						item_name={product.name}
+						item_desc={product.desc}
+						category={product.cat}
 						cost={product.cost}
-						category={product.category}
 					/>
 				))}
 			</div>

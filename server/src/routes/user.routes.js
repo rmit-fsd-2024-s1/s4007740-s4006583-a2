@@ -12,13 +12,13 @@ module.exports = (express, app) => {
 	router.get('/login', controller.login);
 
 	// Create a new user.
-	router.post('/', controller.create);
+	router.post('/create', controller.create);
 
 	// Update an existing user or add user if one doesn't exist
-	router.post('/', controller.upsert);
+	router.post('/upsert', controller.upsert);
 
 	// Delete a user
-	router.post('/', controller.destroy);
+	router.post('/destroy', controller.destroy);
 
 	// Add routes to server.
 	app.use('/api/users', router);
