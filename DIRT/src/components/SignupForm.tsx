@@ -9,6 +9,7 @@ import {
 	testEmail,
 	testPassword,
 } from '../data/repository';
+import UserService from '../data/UserService';
 
 interface Props {
 	onExitClick?: () => void;
@@ -61,14 +62,22 @@ export default function SignUpForm({
 			return;
 		}
 
-		UserDataService.create({
-			uuid: crypto.randomUUID(),
-			name: fields.name,
-			password: fields.password,
-			email: fields.username,
-		}).catch((e) => {
-			console.log(e);
-		});
+		async function getUserFromUUID() {
+			const user = await UserService.getUserFromUUID('1');
+			return user;
+		}
+
+		if (getUserFromUUID() === null) {
+			console.log('Hello, World!');
+		}
+		// UserDataService.create({
+		// 	uuid: crypto.randomUUID(),
+		// 	name: fields.name,
+		// 	password: fields.password,
+		// 	email: fields.username,
+		// }).catch((e) => {
+		// 	console.log(e);
+		// });
 
 		const verified = loginUser(fields.username, fields.password);
 
@@ -76,7 +85,7 @@ export default function SignUpForm({
 			setFields({ name: '', username: '', password: '' });
 		}
 
-		location.reload();
+		// location.reload();
 	};
 
 	const style: CSSProperties = {

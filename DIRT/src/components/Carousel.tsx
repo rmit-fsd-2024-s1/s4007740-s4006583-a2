@@ -4,10 +4,12 @@ import ShopItem from '../components/ShopItem';
 
 interface Props {
 	items: {
-		item_name: string;
-		item_desc: string;
+		id: number;
+		name: string;
+		desc: string;
+		cat: string;
 		cost: number;
-		category: string;
+		special: boolean;
 	}[];
 }
 
@@ -66,15 +68,13 @@ export default function Carousel({ items = [] }: Props) {
 				{/*Map used to reference item and item information with item name as the key */}
 				{items.map((item) => {
 					return (
-						<div
-							className="carousel_item"
-							key={item.item_name}
-						>
+						<div className="carousel_item" key={item.name}>
 							<ShopItem
-								item_name={item.item_name}
-								item_desc={item.item_desc}
+								item_name={item.name}
+								item_desc={item.desc}
 								cost={item.cost}
-								category={item.category}
+								category={item.cat}
+								special={item.special}
 							></ShopItem>
 						</div>
 					);

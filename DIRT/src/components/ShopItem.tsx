@@ -16,6 +16,7 @@ interface Props {
 	item_desc: string;
 	cost: number;
 	category: string;
+	special: boolean;
 }
 
 export default function ShopItem({
@@ -23,6 +24,7 @@ export default function ShopItem({
 	item_desc = '',
 	cost = 0,
 	category = '',
+	special = false,
 }: Props) {
 	const [fields, setFields] = useState({ quantity: '' });
 	const [showSignIn, setShowSignIn] = useState(false);
@@ -77,24 +79,18 @@ export default function ShopItem({
 
 	const [buyHover, setBuyHover] = useState(false);
 
-	const isSpecial = findSpecials(item_name);
-
 	return (
 		<>
 			<div
 				className="card"
 				style={
-					isSpecial
+					special
 						? { backgroundColor: '#FDFD96' }
 						: { backgroundColor: 'white' }
 				}
 			>
-				{isSpecial ? (
-					<img
-						className="specialIcon"
-						src="/special.png"
-						alt="React Image"
-					/>
+				{special ? (
+					<img className="specialIcon" src="/special.png" alt="React Image" />
 				) : null}
 				<img
 					className="card-img-top"
@@ -107,7 +103,7 @@ export default function ShopItem({
 					<p className="card-text">{item_desc}</p>
 					<div className="price-container">
 						<p className="card-price">${cost.toFixed(2)}</p>
-						{isSpecial ? (
+						{special ? (
 							<p className="card-price-old">
 								${(1.2 * parseFloat(cost.toFixed(2))).toFixed(2)}
 							</p>
@@ -122,10 +118,7 @@ export default function ShopItem({
 							setBuyHover(false);
 						}}
 					>
-						<button
-							onClick={handleSubmit}
-							className="buy-button"
-						>
+						<button onClick={handleSubmit} className="buy-button">
 							Add to cart
 						</button>
 						{buyHover === true ? (

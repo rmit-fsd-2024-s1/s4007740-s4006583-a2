@@ -1,8 +1,7 @@
-import { SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../styles/Products.css';
 import { BrowserRouter } from 'react-router-dom';
-import { getSpecials, initSpecials } from '../data/repository';
 import ShopItem from '../components/ShopItem';
 import Footer from '../components/Footer';
 import ItemService from '../data/ItemService';
@@ -103,6 +102,7 @@ export default function products() {
 						item_desc={product.desc}
 						category={product.cat}
 						cost={product.cost}
+						special={product.special}
 					/>
 				))}
 			</div>

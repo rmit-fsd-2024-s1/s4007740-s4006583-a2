@@ -3,17 +3,60 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../styles/Home.css';
 import Carousel from '../components/Carousel';
 import Footer from '../components/Footer';
-import { getSpecials, initSpecials } from '../data/repository';
 import { useEffect } from 'react';
+import ItemService from '../data/ItemService';
 
 export default function Home() {
-	const [specials, setSpecials] = useState([]);
+	const [specials, setSpecials] = useState<
+		{
+			id: number;
+			name: string;
+			desc: string;
+			cat: string;
+			cost: number;
+			special: boolean;
+		}[]
+	>([]);
 
-	if (specials.length === 0) {
-		initSpecials();
-		const spec = getSpecials();
-		setSpecials(spec);
-	}
+	useEffect(() => {
+		async function loadSpecials() {
+			const currProducts: {
+				id: number;
+				name: string;
+				desc: string;
+				cat: string;
+				cost: number;
+				special: boolean;
+			}[] = await ItemService.getAll();
+			const currSpecials: {
+				id: number;
+				name: string;
+				desc: string;
+				cat: string;
+				cost: number;
+				special: boolean;
+			}[] = [];
+
+			currProducts.forEach(
+				(product: {
+					id: number;
+					name: string;
+					desc: string;
+					cat: string;
+					cost: number;
+					special: boolean;
+				}) => {
+					if (product.special) {
+						currSpecials.push(product);
+					}
+				}
+			);
+
+			setSpecials(currSpecials);
+		}
+
+		loadSpecials();
+	}, []);
 
 	return (
 		<>

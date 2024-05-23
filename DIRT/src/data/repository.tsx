@@ -127,79 +127,6 @@ function getTotalPrice(): number {
 	return totalPrice;
 }
 
-function initSpecials() {
-	if (localStorage.getItem(SPECIALS_KEY) !== null) return;
-	setSpecials([
-		{
-			item_name: 'apples',
-			item_desc: 'Pink Lady',
-			cost: 0.79,
-			category: 'fruit',
-		},
-		{
-			item_name: 'watermelon',
-			item_desc: 'Red watermelon cut quater',
-			cost: 4.84,
-			category: 'fruit',
-		},
-		{
-			item_name: 'grapes',
-			item_desc: 'White Seedless Grapes',
-			cost: 5.23,
-			category: 'fruit',
-		},
-		{
-			item_name: 'carrots',
-			item_desc: 'Fresh Carrots',
-			cost: 0.35,
-			category: 'veg',
-		},
-		{
-			item_name: 'broccoli',
-			item_desc: 'Fresh Broccoli Crown',
-			cost: 2.15,
-			category: 'veg',
-		},
-		{
-			item_name: 'onion',
-			item_desc: 'Brown Onion',
-			cost: 0.59,
-			category: 'veg',
-		},
-		{
-			item_name: 'potatoes',
-			item_desc: 'White Potato Washed',
-			cost: 0.81,
-			category: 'veg',
-		},
-	]);
-}
-
-function setSpecials(
-	specials: {
-		item_name: string;
-		item_desc: string;
-		cost: number;
-		category: string;
-	}[]
-) {
-	localStorage.setItem(SPECIALS_KEY, JSON.stringify(specials));
-}
-
-function getSpecials() {
-	const data = localStorage.getItem(SPECIALS_KEY);
-
-	if (data !== null) return JSON.parse(data);
-}
-
-function findSpecials(item_name: string) {
-	const specials = JSON.parse(localStorage.getItem(SPECIALS_KEY) || '[]');
-	// Check if the item exists in specials
-	return specials.some(
-		(special: { item_name: string }) => special.item_name === item_name
-	);
-}
-
 function initUsers() {
 	// Will initialize the array for users in localStorage
 	if (localStorage.getItem(USERS_KEY) !== null) return;
@@ -418,9 +345,6 @@ export {
 	getCartItem,
 	removeCartItem,
 	getCart,
-	initSpecials,
-	getSpecials,
 	getUniqueItemCount,
-	findSpecials,
 	getTotalPrice,
 };

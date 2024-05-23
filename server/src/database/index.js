@@ -41,17 +41,6 @@ async function seedData() {
 
 	const argon2 = require('argon2');
 
-	let hash = await argon2.hash('s4006583', { type: argon2.argon2id });
-
-	await db.item.upsert({
-		id: 1,
-		name: 'watermelon',
-		desc: 'Red watermelon cut quarter',
-		cost: 4.95,
-		cat: 'fruit',
-		special: true,
-	});
-
 	const product_list = [
 		{
 			id: 1,
@@ -59,7 +48,7 @@ async function seedData() {
 			desc: 'Pink Lady',
 			cost: 0.79,
 			cat: 'fruit',
-			special: false,
+			special: true,
 		},
 		{
 			id: 2,
@@ -71,7 +60,7 @@ async function seedData() {
 		},
 		{
 			id: 3,
-			name: 'orangesspecial: false,',
+			name: 'oranges',
 			desc: 'Navel',
 			cost: 1.78,
 			cat: 'fruit',
@@ -91,11 +80,11 @@ async function seedData() {
 			desc: 'Red watermelon cut quarter',
 			cost: 4.84,
 			cat: 'fruit',
-			special: false,
+			special: true,
 		},
 		{
 			id: 6,
-			name: 'kiwi',
+			name: 'kiwis',
 			desc: 'Kiwi Fruit Green',
 			cost: 0.79,
 			cat: 'fruit',
@@ -107,7 +96,7 @@ async function seedData() {
 			desc: 'White Seedless Grapes',
 			cost: 5.23,
 			cat: 'fruit',
-			special: false,
+			special: true,
 		},
 		{
 			id: 8,
@@ -115,7 +104,7 @@ async function seedData() {
 			desc: 'Fresh Carrots',
 			cost: 0.35,
 			cat: 'veg',
-			special: false,
+			special: true,
 		},
 		{
 			id: 9,
@@ -131,15 +120,15 @@ async function seedData() {
 			desc: 'Fresh Broccoli Crown',
 			cost: 2.15,
 			cat: 'veg',
-			special: false,
+			special: true,
 		},
 		{
 			id: 11,
-			name: 'onion',
+			name: 'onions',
 			desc: 'Brown Onion',
 			cost: 0.59,
 			cat: 'veg',
-			special: false,
+			special: true,
 		},
 		{
 			id: 12,
@@ -155,7 +144,7 @@ async function seedData() {
 			desc: 'White Potato Washed',
 			cost: 0.81,
 			cat: 'veg',
-			special: false,
+			special: true,
 		},
 		{
 			id: 14,
