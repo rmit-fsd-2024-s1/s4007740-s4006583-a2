@@ -1,9 +1,7 @@
-const USERS_KEY = 'users';
+import { useEffect } from 'react';
+
 const USER_KEY = 'user';
 const CART_KEY = 'cart';
-const SPECIALS_KEY = 'specials';
-
-// Username is email
 
 function initCart() {
 	if (localStorage.getItem(CART_KEY) !== null) return;
@@ -127,98 +125,6 @@ function getTotalPrice(): number {
 	return totalPrice;
 }
 
-function initUsers() {
-	// Will initialize the array for users in localStorage
-	if (localStorage.getItem(USERS_KEY) !== null) return;
-	setUsers([]);
-}
-
-function getUsers() {
-	// Will retrieve users from localStorage
-	const data = localStorage.getItem(USERS_KEY);
-
-	if (data !== null) return JSON.parse(data);
-}
-
-function setUsers(
-	// Will set the array for users in localStorage
-	users: { name: string; uuid: string; username: string; password: string }[]
-) {
-	localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-function addUser(
-	newName: string,
-	newUuid: string,
-	newUsername: string,
-	newPassword: string
-) {
-	// Will add a user to the array for users in localStorage
-	if (localStorage.getItem(USERS_KEY) !== null) {
-		if (checkUserExists(newUsername) === false) {
-			const today = new Date();
-			const dd = String(today.getDate()).padStart(2, '0'); // Day (padded with leading zero if needed)
-			const mm = String(today.getMonth() + 1).padStart(2, '0'); // Month (January is 0, so we add 1)
-			const yyyy = today.getFullYear(); // Year
-			const users = [
-				{
-					name: newName,
-					uuid: newUuid,
-					username: newUsername,
-					password: newPassword,
-					dateJoined: dd + '/' + mm + '/' + yyyy,
-				},
-			].concat(getUsers());
-			setUsers(users);
-		}
-	}
-}
-
-function editUser(
-	newName: string,
-	uuid: string,
-	newUsername: string,
-	newPassword: string
-) {
-	// Will edit a users information
-	if (localStorage.getItem(USERS_KEY) !== null) {
-		if (findUserData(uuid) !== null && checkUserExists(newUsername) === false) {
-			const users = [
-				{
-					name: newName,
-					uuid: uuid,
-					username: newUsername,
-					password: newPassword,
-					dateJoined: findUserData(uuid).dateJoined,
-				},
-			];
-			for (const user of getUsers()) {
-				if (user.uuid !== uuid) {
-					users.push(user);
-				}
-			}
-			setUsers(users);
-		}
-	}
-}
-
-function deleteUser(uuid: string) {
-	if (findUserData(uuid) !== null) {
-		const users: {
-			name: string;
-			uuid: string;
-			username: string;
-			password: string;
-		}[] = [];
-		for (const user of getUsers()) {
-			if (user.uuid !== uuid) {
-				users.push(user);
-			}
-		}
-		setUsers(users);
-	}
-}
-
 function setUser(uuid: string) {
 	// Sets the current user
 	localStorage.setItem(USER_KEY, uuid);
@@ -229,32 +135,9 @@ function getUser(): string | null {
 	return localStorage.getItem(USER_KEY);
 }
 
-function findUserData(uuid = '', username = '') {
-	// Searches for a user
-	const users = getUsers();
-	for (const user of users) {
-		if (user.uuid === uuid || user.username === username) {
-			return user;
-		}
-	}
-	return null;
-}
-
 function removeUser() {
 	// Removes the current user
 	localStorage.removeItem(USER_KEY);
-}
-
-function verifyUser(username: string, password: string): boolean {
-	// Verifies the login information
-	const users = getUsers();
-	for (const user of users) {
-		if (username === user.username && password === user.password) {
-			return true;
-		}
-	}
-
-	return false;
 }
 
 function checkUserExists(username: string): boolean {
@@ -271,12 +154,6 @@ function checkUserExists(username: string): boolean {
 
 function loginUser(username: string, password: string): boolean {
 	// Logs in the user
-	if (verifyUser(username, password)) {
-		setUser(findUserData('', username).uuid);
-		return true;
-	}
-
-	return false;
 }
 
 function testEmail(username: string): boolean {
@@ -327,15 +204,9 @@ function testPassword(password: string): boolean {
 }
 
 export {
-	initUsers,
-	verifyUser,
 	loginUser,
-	addUser,
-	editUser,
-	deleteUser,
 	removeUser,
 	getUser,
-	findUserData,
 	checkUserExists,
 	testEmail,
 	testPassword,

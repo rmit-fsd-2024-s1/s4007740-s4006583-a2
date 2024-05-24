@@ -1,4 +1,4 @@
-import { CSSProperties, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 import '../styles/LoginForm.css';
 import UserDataService from '../data/UserService';
 import CloseButton from './CloseButton';
@@ -52,6 +52,9 @@ export default function SignUpForm({
 			setEmailError('Enter valid email address');
 			setPasswordError(null);
 			return;
+		} else {
+			setEmailError(null);
+			setPasswordError(null);
 		}
 
 		if (!testPassword(fields.password)) {
@@ -60,32 +63,36 @@ export default function SignUpForm({
 			);
 			setEmailError(null);
 			return;
+		} else {
+			setEmailError(null);
+			setPasswordError(null);
+		}
+		async function userCreated() {
+			const user = await UserDataService.findOrCreate({
+				uuid: crypto.randomUUID(),
+				name: fields.name,
+				password: fields.password,
+				email: fields.username,
+			}).catch((e) => {
+				console.log(e);
+			});
+
+			if (user === null) {
+				setEmailError('This email is already in use');
+				setPasswordError(null);
+				return;
+			} else {
+				location.reload();
+			}
 		}
 
-		async function getUserFromUUID() {
-			const user = await UserService.getUserFromUUID('1');
-			return user;
-		}
-
-		if (getUserFromUUID() === null) {
-			console.log('Hello, World!');
-		}
-		// UserDataService.create({
-		// 	uuid: crypto.randomUUID(),
-		// 	name: fields.name,
-		// 	password: fields.password,
-		// 	email: fields.username,
-		// }).catch((e) => {
-		// 	console.log(e);
-		// });
+		userCreated();
 
 		const verified = loginUser(fields.username, fields.password);
 
 		if (verified) {
 			setFields({ name: '', username: '', password: '' });
 		}
-
-		// location.reload();
 	};
 
 	const style: CSSProperties = {

@@ -43,10 +43,8 @@ export default function products() {
 
 	const filteredProducts =
 		selectedCategories.length > 0
-			? ItemService.getAll().filter((products) =>
-					selectedCategories.includes(products.cat)
-			  )
-			: ItemService.getAll();
+			? products.filter((products) => selectedCategories.includes(products.cat))
+			: products;
 
 	return (
 		<>
@@ -95,7 +93,7 @@ export default function products() {
 					justifyContent: 'center',
 				}}
 			>
-				{products.map((product, index) => (
+				{filteredProducts.map((product, index) => (
 					<ShopItem
 						key={product.id}
 						item_name={product.name}

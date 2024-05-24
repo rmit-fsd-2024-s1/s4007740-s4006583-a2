@@ -9,7 +9,15 @@ async function getAll() {
 }
 
 async function getUserFromUUID(uuid: string) {
-	const response = await axios.get(API_HOST + '/api/users/select/' + uuid);
+	const response = await axios.get(API_HOST + '/api/users/selectUUID/' + uuid);
+
+	return response.data;
+}
+
+async function getUserFromEmail(email: string) {
+	const response = await axios.get(
+		API_HOST + '/api/users/selectEmail/' + email
+	);
 
 	return response.data;
 }
@@ -25,8 +33,21 @@ async function create(user: {
 	return response.data;
 }
 
+async function findOrCreate(user: {
+	uuid: string;
+	name: string;
+	email: string;
+	password: string;
+}) {
+	const response = await axios.post(API_HOST + '/api/users/findOrCreate', user);
+
+	return response.data;
+}
+
 export default {
 	create,
+	findOrCreate,
 	getAll,
 	getUserFromUUID,
+	getUserFromEmail,
 };

@@ -8,47 +8,75 @@ exports.all = async (req, res) => {
 	res.json(users);
 };
 
-// Select one user from the database.
-exports.one = async (req, res) => {
-	const user = await db.user.findByPk(req.params.id);
+// Select one user from the database using uuid.
+exports.getByUUID = async (req, res) => {
+	const user = await db.user.findByPk(req.params.uuid);
 
 	res.json(user);
 };
 
-// Select one user from the database if username and password are a match.
-exports.login = async (req, res) => {
-	const user = await db.user.findByPk(req.query.username);
+// Select one user from the database using email.
+exports.getByEmail = async (req, res) => {
+	const user = await db.user.findOne({ where: { email: req.params.email } });
 
-	if (
-		user === null ||
-		(await argon2.verify(user.password_hash, req.query.password)) === false
-	)
-		// Login failed.
-		res.json(null);
-	else res.json(user);
+	res.json(user);
 };
 
 // Create a user in the database.
 exports.create = async (req, res) => {
 	const hash = await argon2.hash(req.body.password, { type: argon2.argon2id });
 
+	const today = new Date();
+	const dd = String(today.getDate()).padStart(2, '0'); // Day (padded with leading zero if needed)
+	const mm = String(today.getMonth() + 1).padStart(2, '0'); // Month (January is 0, so we add 1)
+	const yyyy = today.getFullYear(); // Year
+
+	const doj = dd + '/' + mm + '/' + yyyy;
+
 	const user = await db.user.create({
-		id: req.body.id,
 		uuid: req.body.uuid,
 		name: req.body.name,
 		email: req.body.email,
 		password_hash: hash,
+		doj: doj,
 		admin: false,
 	});
 
 	res.json(user);
 };
 
+exports.findOrCreate = async (req, res) => {
+	const hash = await argon2.hash(req.body.password, { type: argon2.argon2id });
+
+	const today = new Date();
+	const dd = String(today.getDate()).padStart(2, '0'); // Day (padded with leading zero if needed)
+	const mm = String(today.getMonth() + 1).padStart(2, '0'); // Month (January is 0, so we add 1)
+	const yyyy = today.getFullYear(); // Year
+
+	const doj = dd + '/' + mm + '/' + yyyy;
+
+	const [user, created] = await db.user.findOrCreate({
+		where: { email: req.body.email },
+		defaults: {
+			uuid: req.body.uuid,
+			name: req.body.name,
+			password_hash: hash,
+			doj: doj,
+			admin: false,
+		},
+	});
+
+	if (created) {
+		res.json(user);
+	} else {
+		res.json(null);
+	}
+};
+
 exports.upsert = async (req, res) => {
 	const hash = await argon2.hash(req.body.password, { type: argon2.argon2id });
 
 	const user = await db.user.upsert({
-		id: req.body.id,
 		uuid: req.body.uuid,
 		name: req.body.name,
 		email: req.body.email,
@@ -70,4 +98,17 @@ exports.destroy = async (req, res) => {
 	});
 
 	res.json(user);
+};
+
+// Select one user from the database if username and password are a match.
+exports.login = async (req, res) => {
+	const user = await db.user.findByPk(req.query.username);
+
+	if (
+		user === null ||
+		(await argon2.verify(user.password_hash, req.query.password)) === false
+	)
+		// Login failed.
+		res.json(null);
+	else res.json(user);
 };

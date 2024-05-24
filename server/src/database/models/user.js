@@ -21,9 +21,6 @@ module.exports = (sequelize, DataTypes) =>
 			doj: {
 				type: DataTypes.STRING(40),
 			},
-			profile_Img: {
-				type: DataTypes.STRING(40),
-			},
 			admin: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
