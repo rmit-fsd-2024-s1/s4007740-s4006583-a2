@@ -60,7 +60,7 @@ export default function SignUpForm({
 			setPasswordError(null);
 		}
 		async function userCreated() {
-			const user = await UserDataService.findOrCreate({
+			let user = await UserDataService.findOrCreate({
 				uuid: crypto.randomUUID(),
 				name: fields.name,
 				password: fields.password,
@@ -74,25 +74,20 @@ export default function SignUpForm({
 				setPasswordError(null);
 				return;
 			}
-		}
 
-		userCreated();
-
-		async function userLogin() {
-			const user = await UserDataService.login(
-				fields.name,
+			user = await UserDataService.login(
+				fields.username,
 				fields.password
 			).catch((e) => {
 				console.log(e);
 			});
 
 			if (user !== null) {
-				setFields({ name: '', username: '', password: '' });
-				// location.reload();
+				location.reload();
 			}
 		}
 
-		userLogin();
+		userCreated();
 	};
 
 	const style: CSSProperties = {

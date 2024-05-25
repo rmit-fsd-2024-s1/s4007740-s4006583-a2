@@ -52,10 +52,8 @@ async function login(email: string, password: string) {
 
 	const user = response.data;
 
-	console.log(user);
-
 	if (user !== null) {
-		setUser(email);
+		setUser(user.uuid);
 	}
 
 	return user;

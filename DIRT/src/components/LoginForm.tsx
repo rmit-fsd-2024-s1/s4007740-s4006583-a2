@@ -2,6 +2,7 @@ import { CSSProperties, useState } from 'react';
 import '../styles/LoginForm.css';
 import CloseButton from './CloseButton';
 import Popup from './Popup';
+import UserDataService from '../data/UserService';
 
 interface Props {
 	onExitClick?: () => void;
@@ -27,14 +28,22 @@ export default function LoginForm({
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
-		const verified = true;
+		async function loginUser() {
+			const user = await UserDataService.login(
+				fields.username,
+				fields.password
+			).catch((e) => {
+				console.log(e);
+			});
 
-		if (verified) {
-			setFields({ username: '', password: '' });
-			location.reload();
-		} else {
-			alert('Username or password are incorrect!');
+			if (user !== null) {
+				location.reload();
+			} else {
+				alert('Username or password are incorrect!');
+			}
 		}
+
+		loginUser();
 	};
 
 	const style: CSSProperties = {
