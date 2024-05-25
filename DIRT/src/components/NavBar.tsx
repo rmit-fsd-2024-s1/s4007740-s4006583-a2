@@ -32,10 +32,7 @@ export default function NavBar() {
 			<Headroom>
 				<nav className="navbar navbar-light shadow">
 					<div className="container-left">
-						<Link
-							to={'/'}
-							className="title"
-						>
+						<Link to={'/'} className="title">
 							SOIL
 						</Link>
 						<ul>
@@ -71,9 +68,7 @@ export default function NavBar() {
 										id="dropdown-basic"
 										className="dropdown-width dropdown-link"
 									>
-										{getUser() !== null
-											? 'Welcome ' + findUserData(getUser() + '')?.name
-											: 'Account'}
+										{getUser() !== null ? 'Welcome' : 'Account'}
 									</Dropdown.Toggle>
 									<Dropdown.Menu className="dropdown-width">
 										{getUser() !== null ? (

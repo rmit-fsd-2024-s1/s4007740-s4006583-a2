@@ -62,7 +62,6 @@ function addCartItem(
 	newCost: number,
 	newCategory: string
 ) {
-	// Will add a user to the array for users in localStorage
 	if (localStorage.getItem(CART_KEY) !== null) {
 		if (getCartItem(newName) === -1) {
 			const cart = [
@@ -142,7 +141,7 @@ function removeUser() {
 
 function checkUserExists(username: string): boolean {
 	// Verify the given user exists in the array for users in the localStorage
-	const users = getUsers();
+	const users = [];
 	for (const user of users) {
 		if (username === user.username) {
 			return true;
@@ -150,10 +149,6 @@ function checkUserExists(username: string): boolean {
 	}
 
 	return false;
-}
-
-function loginUser(username: string, password: string): boolean {
-	// Logs in the user
 }
 
 function testEmail(username: string): boolean {
@@ -204,8 +199,8 @@ function testPassword(password: string): boolean {
 }
 
 export {
-	loginUser,
 	removeUser,
+	setUser,
 	getUser,
 	checkUserExists,
 	testEmail,

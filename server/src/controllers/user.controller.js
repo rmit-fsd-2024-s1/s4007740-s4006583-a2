@@ -100,9 +100,9 @@ exports.destroy = async (req, res) => {
 	res.json(user);
 };
 
-// Select one user from the database if username and password are a match.
+// Select one user from the database if email and password are a match.
 exports.login = async (req, res) => {
-	const user = await db.user.findByPk(req.query.username);
+	const user = await db.user.findOne({ where: { email: req.query.email } });
 
 	if (
 		user === null ||

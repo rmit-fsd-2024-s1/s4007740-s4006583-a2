@@ -2,7 +2,7 @@ import { CSSProperties } from 'react';
 import Popup from './Popup';
 import '../styles/LoginForm.css';
 import CloseButton from './CloseButton';
-import { deleteUser, getUser, removeUser } from '../data/repository';
+import { getUser, removeUser } from '../data/repository';
 
 interface Props {
 	onExitClick?: () => void;
@@ -17,7 +17,6 @@ export default function DeleteProfileForm({
 		const uuid = getUser();
 		if (uuid !== null) {
 			removeUser();
-			deleteUser(uuid);
 			window.location.assign('/');
 		}
 	};

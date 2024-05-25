@@ -2,14 +2,7 @@ import { CSSProperties, useState } from 'react';
 import '../styles/LoginForm.css';
 import CloseButton from './CloseButton';
 import Popup from './Popup';
-import {
-	loginUser,
-	initUsers,
-	testEmail,
-	testPassword,
-	editUser,
-	getUser,
-} from '../data/repository';
+import { testEmail, testPassword } from '../data/repository';
 
 interface Props {
 	onExitClick?: () => void;
@@ -47,13 +40,6 @@ export default function EditProfileForm({
 	}
 	const handleSubmit = (event) => {
 		event.preventDefault();
-
-		initUsers();
-
-		const uuid = getUser() !== null ? getUser() : '';
-		if (uuid !== null) {
-			editUser(fields.name, uuid, fields.username, fields.password);
-		}
 
 		if (!testEmail(fields.username)) {
 			return;

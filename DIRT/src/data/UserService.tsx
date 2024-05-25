@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setUser } from './repository';
 
 const API_HOST = 'http://localhost:4000';
 
@@ -44,9 +45,26 @@ async function findOrCreate(user: {
 	return response.data;
 }
 
+async function login(email: string, password: string) {
+	const response = await axios.get(API_HOST + '/api/users/login', {
+		params: { email, password },
+	});
+
+	const user = response.data;
+
+	console.log(user);
+
+	if (user !== null) {
+		setUser(email);
+	}
+
+	return user;
+}
+
 export default {
 	create,
 	findOrCreate,
+	login,
 	getAll,
 	getUserFromUUID,
 	getUserFromEmail,

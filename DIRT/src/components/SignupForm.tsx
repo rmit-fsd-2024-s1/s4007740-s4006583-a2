@@ -3,13 +3,7 @@ import '../styles/LoginForm.css';
 import UserDataService from '../data/UserService';
 import CloseButton from './CloseButton';
 import Popup from './Popup';
-import {
-	loginUser,
-	initUsers,
-	testEmail,
-	testPassword,
-} from '../data/repository';
-import UserService from '../data/UserService';
+import { testEmail, testPassword } from '../data/repository';
 
 interface Props {
 	onExitClick?: () => void;
@@ -46,8 +40,6 @@ export default function SignUpForm({
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
-		initUsers();
-
 		if (!testEmail(fields.username)) {
 			setEmailError('Enter valid email address');
 			setPasswordError(null);
@@ -81,18 +73,26 @@ export default function SignUpForm({
 				setEmailError('This email is already in use');
 				setPasswordError(null);
 				return;
-			} else {
-				location.reload();
 			}
 		}
 
 		userCreated();
 
-		const verified = loginUser(fields.username, fields.password);
+		async function userLogin() {
+			const user = await UserDataService.login(
+				fields.name,
+				fields.password
+			).catch((e) => {
+				console.log(e);
+			});
 
-		if (verified) {
-			setFields({ name: '', username: '', password: '' });
+			if (user !== null) {
+				setFields({ name: '', username: '', password: '' });
+				// location.reload();
+			}
 		}
+
+		userLogin();
 	};
 
 	const style: CSSProperties = {

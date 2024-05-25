@@ -8,7 +8,11 @@ module.exports = (express, app) => {
 	// Select a single user with uuid.
 	router.get('/selectUUID/:uuid', controller.getByUUID);
 
+	// Select a single user with email
 	router.get('/selectEmail/:email', controller.getByEmail);
+
+	// Verify login
+	router.get('/login', controller.login);
 
 	// Create a new user.
 	router.post('/create', controller.create);
