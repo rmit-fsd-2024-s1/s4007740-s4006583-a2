@@ -5,7 +5,6 @@ import ProfilePage from './components/ProfilePage';
 import OrderHistory from './pages/profile-pages/OrderHistory';
 import EditProfile from './pages/profile-pages/EditProfile';
 import Products from './pages/Products';
-import GorgeousGarden from './pages/GorgeousGarden';
 import NavBar from './components/NavBar';
 import ShoppingCart from './pages/ShoppingCart';
 import { useEffect, useState } from 'react';
@@ -22,8 +21,14 @@ export default function App() {
 					<div>
 						<NavBar />
 						<Routes>
-							<Route path="/" element={<Home />} />
-							<Route path="/Profile" element={<ProfilePage />} />
+							<Route
+								path="/"
+								element={<Home />}
+							/>
+							<Route
+								path="/Profile"
+								element={<ProfilePage />}
+							/>
 							<Route
 								path="/Profile/EditProfile"
 								element={
@@ -48,9 +53,14 @@ export default function App() {
 									</ProfilePage>
 								}
 							/>
-							<Route path="/products" element={<Products />} />
-							<Route path="/GorgeousGarden" element={<GorgeousGarden />} />
-							<Route path="/ShoppingCart" element={<ShoppingCart />} />
+							<Route
+								path="/products"
+								element={<Products />}
+							/>
+							<Route
+								path="/ShoppingCart"
+								element={<ShoppingCart />}
+							/>
 						</Routes>
 					</div>
 				</main>

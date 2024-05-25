@@ -32,7 +32,10 @@ export default function NavBar() {
 			<Headroom>
 				<nav className="navbar navbar-light shadow">
 					<div className="container-left">
-						<Link to={'/'} className="title">
+						<Link
+							to={'/'}
+							className="title"
+						>
 							SOIL
 						</Link>
 						<ul>
@@ -44,17 +47,6 @@ export default function NavBar() {
 										alt="React Image"
 									/>
 									Browse Products
-								</Link>
-							</li>
-							{/*Add a hover for each nav which shows a small description of page i.e. Gorgeous garden - How to grow your own little garden*/}
-							<li style={{ margin: '1rem' }}>
-								<Link to={'/GorgeousGarden'}>
-									<img
-										className="navIcons"
-										src="/garden.png"
-										alt="React Image"
-									/>
-									Gorgeous Garden
 								</Link>
 							</li>
 						</ul>
