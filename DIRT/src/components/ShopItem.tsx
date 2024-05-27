@@ -90,7 +90,11 @@ export default function ShopItem({
 				}
 			>
 				{special ? (
-					<img className="specialIcon" src="/special.png" alt="React Image" />
+					<img
+						className="specialIcon"
+						src="/special.png"
+						alt="React Image"
+					/>
 				) : null}
 				<img
 					className="card-img-top"
@@ -118,7 +122,10 @@ export default function ShopItem({
 							setBuyHover(false);
 						}}
 					>
-						<button onClick={handleSubmit} className="buy-button">
+						<button
+							onClick={handleSubmit}
+							className="buy-button"
+						>
 							Add to cart
 						</button>
 						{buyHover === true ? (
@@ -131,6 +138,9 @@ export default function ShopItem({
 								placeholder="Qty"
 							></input>
 						) : null}
+					</div>
+					<div className="review">
+						<button /*onClick={handleSubmit}*/>Review</button>
 					</div>
 				</div>
 			</div>

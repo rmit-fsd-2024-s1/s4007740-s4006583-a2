@@ -19,22 +19,22 @@ module.exports = (sequelize, DataTypes) =>
 				type: DataTypes.STRING(40),
 				allowNull: false,
 			},
-			customer_id: {
-				type: DataTypes.STRING(36),
-				allowNull: false,
-				references: {
-					model: 'users',
-					key: 'uuid',
-				},
-			},
-			item_id: {
-				type: DataTypes.INTEGER,
-				allowNull: false,
-				references: {
-					model: 'items',
-					key: 'id',
-				},
-			},
+			// customer_id: {
+			// 	type: DataTypes.STRING(36),
+			// 	allowNull: false,
+			// 	references: {
+			// 		model: 'users',
+			// 		key: 'uuid',
+			// 	},
+			// },
+			// item_id: {
+			// 	type: DataTypes.INTEGER,
+			// 	allowNull: false,
+			// 	references: {
+			// 		model: 'items',
+			// 		key: 'id',
+			// 	},
+			// },
 		},
 		{
 			// Don't add the timestamp attributes (updatedAt, createdAt).
