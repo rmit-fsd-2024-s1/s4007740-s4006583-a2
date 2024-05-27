@@ -1,8 +1,9 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, useState } from 'react';
 import Popup from './Popup';
 import '../styles/LoginForm.css';
 import CloseButton from './CloseButton';
-import { getUser, removeUser } from '../data/repository';
+import { getUser } from '../data/repository';
+import UserDataService from '../data/UserService';
 
 interface Props {
 	onExitClick?: () => void;
@@ -13,12 +14,35 @@ export default function DeleteProfileForm({
 	onExitClick = () => {},
 	visible = false,
 }: Props) {
+	const [fields, setFields] = useState({
+		password: '',
+		confirmPassword: '',
+	});
+
+	const handleInputChange = (event) => {
+		const name: 'password' | 'confirmPassword' = event.target.name;
+		const value = event.target.value;
+
+		const temp = {
+			password: fields.password,
+			confirmPassword: fields.confirmPassword,
+		};
+
+		temp[name] = value;
+		setFields(temp);
+	};
+
 	const handleSubmit = () => {
-		const uuid = getUser();
-		if (uuid !== null) {
-			removeUser();
-			window.location.assign('/');
+		async function deleteUser() {
+			const userInfo = getUser();
+			if (userInfo !== null) {
+				const user = await UserDataService.getUserFromUUID(userInfo);
+				if (fields.password === fields.confirmPassword && user !== null) {
+					await UserDataService.destroy();
+				}
+			}
 		}
+		deleteUser();
 	};
 
 	const style: CSSProperties = {
@@ -35,6 +59,26 @@ export default function DeleteProfileForm({
 						<h2>Are you sure?</h2>
 						<h4>This cannot be undone!!!</h4>
 					</div>
+					<p>PASSWORD</p>
+					<input
+						type="password"
+						name="password"
+						className="Password"
+						value={fields.password}
+						onChange={handleInputChange}
+						placeholder="Password"
+					/>
+					<p>CONFIRM PASSWORD</p>
+					<input
+						type="password"
+						name="confirmPassword"
+						className="Password"
+						value={fields.confirmPassword}
+						onChange={handleInputChange}
+						placeholder="Confirm Password"
+					/>
+					<br />
+					<br />
 					<div className="confirmation-buttons">
 						<button
 							style={{

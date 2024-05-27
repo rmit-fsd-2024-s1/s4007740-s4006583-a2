@@ -70,6 +70,12 @@ async function login(email: string, password: string) {
 	return user;
 }
 
+async function destroy() {
+	const response = await axios.post(API_HOST, '/api/users/destroy');
+
+	return response.data;
+}
+
 export default {
 	create,
 	upsert,
@@ -78,4 +84,5 @@ export default {
 	getAll,
 	getUserFromUUID,
 	getUserFromEmail,
+	destroy,
 };
