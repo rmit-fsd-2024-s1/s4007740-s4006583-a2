@@ -34,6 +34,17 @@ async function create(user: {
 	return response.data;
 }
 
+async function upsert(user: {
+	uuid: string;
+	name: string;
+	email: string;
+	password: string;
+}) {
+	const response = await axios.post(API_HOST + '/api/users/upsert', user);
+
+	return response.data;
+}
+
 async function findOrCreate(user: {
 	uuid: string;
 	name: string;
@@ -61,6 +72,7 @@ async function login(email: string, password: string) {
 
 export default {
 	create,
+	upsert,
 	findOrCreate,
 	login,
 	getAll,

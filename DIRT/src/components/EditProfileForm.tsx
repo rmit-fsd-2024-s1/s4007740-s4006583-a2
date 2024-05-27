@@ -1,8 +1,9 @@
-import { CSSProperties, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 import '../styles/LoginForm.css';
 import CloseButton from './CloseButton';
 import Popup from './Popup';
-import { testEmail, testPassword } from '../data/repository';
+import { testEmail, testPassword, getUser } from '../data/repository';
+import UserDataService from '../data/UserService';
 
 interface Props {
 	onExitClick?: () => void;
@@ -20,16 +21,18 @@ export default function EditProfileForm({
 		name: '',
 		username: '',
 		password: '',
+		confirmPassword: '',
 	});
 
 	const handleInputChange = (event) => {
-		const name: 'username' | 'password' = event.target.name;
+		const name: 'username' | 'password' | 'confirmPassword' = event.target.name;
 		const value = event.target.value;
 
 		const temp = {
 			name: fields.name,
 			username: fields.username,
 			password: fields.password,
+			confirmPassword: fields.confirmPassword,
 		};
 
 		temp[name] = value;
@@ -49,13 +52,33 @@ export default function EditProfileForm({
 			return;
 		}
 
-		const verified = loginUser(fields.username, fields.password);
-
-		if (verified) {
-			setFields({ name: '', username: '', password: '' });
+		if (fields.password != fields.confirmPassword) {
+			return;
 		}
 
-		location.reload();
+		async function editUserDetails() {
+			const userInfo = getUser();
+			if (userInfo !== null) {
+				console.log(userInfo);
+				let user = await UserDataService.getUserFromUUID(userInfo);
+				if (user !== null) {
+					user = await UserDataService.upsert({
+						uuid: userInfo,
+						name: fields.name,
+						email: fields.username,
+						password: fields.password,
+					});
+				} else {
+					return;
+				}
+			} else {
+				return;
+			}
+		}
+
+		editUserDetails();
+
+		// location.reload();
 	};
 
 	const style: CSSProperties = {
@@ -95,6 +118,15 @@ export default function EditProfileForm({
 						value={fields.password}
 						onChange={handleInputChange}
 						placeholder="Password"
+					/>
+					<p>CONFIRM PASSWORD</p>
+					<input
+						type="password"
+						name="confirmPassword"
+						className="Password"
+						value={fields.confirmPassword}
+						onChange={handleInputChange}
+						placeholder="Confirm Password"
 					/>
 					<br />
 					<br />

@@ -18,19 +18,21 @@ export default function SignUpForm({
 		name: '',
 		username: '',
 		password: '',
+		confirmPassword: '',
 	});
 
 	const [emailError, setEmailError] = useState<string | null>(null);
 	const [passwordError, setPasswordError] = useState<string | null>(null);
 
 	const handleInputChange = (event) => {
-		const name: 'username' | 'password' = event.target.name;
+		const name: 'username' | 'password' | 'confirmPassword' = event.target.name;
 		const value = event.target.value;
 
 		const temp = {
 			name: fields.name,
 			username: fields.username,
 			password: fields.password,
+			confirmPassword: fields.confirmPassword,
 		};
 
 		temp[name] = value;
@@ -53,6 +55,15 @@ export default function SignUpForm({
 			setPasswordError(
 				'Ensure password contains 8 characters, lowercase, uppercase, and numerical value'
 			);
+			setEmailError(null);
+			return;
+		} else {
+			setEmailError(null);
+			setPasswordError(null);
+		}
+
+		if (fields.password != fields.confirmPassword) {
+			setPasswordError('Passwords do not match');
 			setEmailError(null);
 			return;
 		} else {
@@ -137,6 +148,15 @@ export default function SignUpForm({
 						value={fields.password}
 						onChange={handleInputChange}
 						placeholder="Password"
+					/>
+					<p>CONFIRM PASSWORD</p>
+					<input
+						type="password"
+						name="confirmPassword"
+						className="Password"
+						value={fields.confirmPassword}
+						onChange={handleInputChange}
+						placeholder="Confirm Password"
 					/>
 					<br />
 					<br />

@@ -76,12 +76,23 @@ exports.findOrCreate = async (req, res) => {
 exports.upsert = async (req, res) => {
 	const hash = await argon2.hash(req.body.password, { type: argon2.argon2id });
 
-	const user = await db.user.upsert({
+	let doj = '';
+	let admin = false;
+
+	let user = await db.user.findByPk(req.body.uuid);
+
+	if (user !== null) {
+		doj = user.doj;
+		admin = user.admin;
+	}
+
+	user = await db.user.upsert({
 		uuid: req.body.uuid,
 		name: req.body.name,
 		email: req.body.email,
 		password_hash: hash,
-		admin: false,
+		doj: doj,
+		admin: admin,
 	});
 
 	res.json(user);
