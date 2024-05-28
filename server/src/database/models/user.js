@@ -25,6 +25,9 @@ module.exports = (sequelize, DataTypes) =>
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
 			},
+			cart: {
+				type: DataTypes.STRING(250),
+			},
 		},
 		{
 			// Don't add the timestamp attributes (updatedAt, createdAt).

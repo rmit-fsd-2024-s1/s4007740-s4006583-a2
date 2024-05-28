@@ -1,14 +1,10 @@
-import {
-	getCart,
-	initCart,
-	removeCartItem,
-	setCartItemQuantity,
-	getTotalPrice,
-} from '../data/repository';
+import { editOrder, getUser, readAndGetOrder } from '../data/repository';
+import ItemDataService from '../data/ItemService';
+import UserDataService from '../data/UserService';
 import '../styles/ShoppingCart.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import Footer from '../components/Footer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ShoppingCart() {
 	const [fields, setFields] = useState({
@@ -56,22 +52,43 @@ export default function ShoppingCart() {
 				return;
 			}
 			for (const item of cart) {
-				removeCartItem(item.item_name);
 			}
-			initCart();
-			setCart(getCart());
 		}
 	};
 
+	async function getCart() {
+		const userInfo = getUser();
+		if (userInfo !== null) {
+			const user = await UserDataService.getUserFromUUID(userInfo);
+			if (user !== null) {
+				const cart = [];
+				const readCart = readAndGetOrder(user.cart);
+				for (const item of readCart) {
+					const i = await ItemDataService.getOne(item.id);
+					if (i !== null) {
+						cart.push({
+							id: i.id,
+							name: i.name,
+							price: Number(i.price),
+							quantity: i.quantity,
+						});
+					}
+				}
+			}
+		}
+	}
+	useEffect(() => {
+		getCart();
+	}, []);
+
 	const [cart, setCart] = useState<
 		{
-			item_name: string;
-			item_desc: string;
-			cost: number;
-			category: string;
-			quantity: number;
+			id: string;
+			name: string;
+			price: number;
+			quantity: string;
 		}[]
-	>(getCart());
+	>([]);
 
 	const incrementQuantity = (
 		cartItem: {
@@ -84,20 +101,16 @@ export default function ShoppingCart() {
 		incrementAmount: number
 	) => {
 		if (cartItem.quantity + incrementAmount >= 1) {
-			setCartItemQuantity({
-				item_name: cartItem.item_name,
-				item_desc: cartItem.item_desc,
-				cost: cartItem.cost,
-				category: cartItem.category,
-				quantity: cartItem.quantity + incrementAmount,
-			});
-			setCart(getCart());
+			// setCartItemQuantity({
+			// 	item_name: cartItem.item_name,
+			// 	item_desc: cartItem.item_desc,
+			// 	cost: cartItem.cost,
+			// 	category: cartItem.category,
+			// 	quantity: cartItem.quantity + incrementAmount,
+			// });
+			// setCart(getCart());
 		}
 	};
-
-	if (cart.length === 0) {
-		initCart();
-	}
 
 	return (
 		<>
@@ -111,7 +124,7 @@ export default function ShoppingCart() {
 							return (
 								<div className="cart-item">
 									<div style={{ minWidth: '5rem' }}>
-										{cartItem.item_name.toUpperCase()}
+										{/* {cartItem.item_name.toUpperCase()} */}
 									</div>
 									<div style={{ minWidth: '5rem' }}>
 										Qty: {cartItem.quantity}
@@ -124,7 +137,7 @@ export default function ShoppingCart() {
 												borderLeft: '1px solid rgba(0, 0, 0, 0.175)',
 											}}
 											onClick={() => {
-												incrementQuantity(cartItem, -1);
+												// incrementQuantity(cartItem, -1);
 											}}
 										>
 											-
@@ -136,7 +149,7 @@ export default function ShoppingCart() {
 												borderRight: '1px solid rgba(0, 0, 0, 0.175)',
 											}}
 											onClick={() => {
-												incrementQuantity(cartItem, 1);
+												// incrementQuantity(cartItem, 1);
 											}}
 										>
 											+
@@ -146,8 +159,8 @@ export default function ShoppingCart() {
 										<button
 											className="remove-button"
 											onClick={() => {
-												removeCartItem(cartItem.item_name);
-												setCart(getCart());
+												// removeCartItem(cartItem.item_name);
+												// setCart(getCart());
 											}}
 										>
 											REMOVE
@@ -158,7 +171,7 @@ export default function ShoppingCart() {
 						})
 					)}
 					<div className="cart-item">
-						Total price: ${getTotalPrice().toFixed(2)}
+						{/* Total price: ${getTotalPrice().toFixed(2)} */}
 					</div>
 				</div>
 				<div className="cart-container-right">

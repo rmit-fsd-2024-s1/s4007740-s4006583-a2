@@ -95,7 +95,7 @@ export default function products() {
 			>
 				{filteredProducts.map((product, index) => (
 					<ShopItem
-						key={product.id}
+						item_id={String(product.id)}
 						item_name={product.name}
 						item_desc={product.desc}
 						category={product.cat}

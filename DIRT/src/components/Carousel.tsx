@@ -68,8 +68,12 @@ export default function Carousel({ items = [] }: Props) {
 				{/*Map used to reference item and item information with item name as the key */}
 				{items.map((item) => {
 					return (
-						<div className="carousel_item" key={item.name}>
+						<div
+							className="carousel_item"
+							key={item.name}
+						>
 							<ShopItem
+								item_id={String(item.id)}
 								item_name={item.name}
 								item_desc={item.desc}
 								cost={item.cost}

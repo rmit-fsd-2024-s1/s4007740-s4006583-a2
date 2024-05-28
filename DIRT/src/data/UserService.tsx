@@ -45,6 +45,10 @@ async function upsert(user: {
 	return response.data;
 }
 
+async function updateCart(user: { uuid: string; cart: string }) {
+	const response = await axios.post(API_HOST + '/api/users/updateCart', user);
+}
+
 async function findOrCreate(user: {
 	uuid: string;
 	name: string;
@@ -79,6 +83,7 @@ async function destroy() {
 export default {
 	create,
 	upsert,
+	updateCart,
 	findOrCreate,
 	login,
 	getAll,

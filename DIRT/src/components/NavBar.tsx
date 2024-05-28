@@ -4,13 +4,7 @@ import LoginForm from './LoginForm';
 import SignUpForm from './SignupForm';
 import { useState, useEffect } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
-import {
-	getCart,
-	isCartEmpty,
-	removeUser,
-	getUser,
-	getTotalPrice,
-} from '../data/repository';
+import { removeUser, getUser } from '../data/repository';
 import UserDataService from '../data/UserService';
 import Headroom from 'react-headroom';
 import { HorizontalCenter } from './Center';
@@ -19,15 +13,10 @@ export default function NavBar() {
 	const [username, setUsername] = useState('');
 	const [loginVisible, setLoginVisible] = useState(false);
 	const [signupVisible, setSignupVisible] = useState(false);
-	const [cartEmpty, setCartEmpty] = useState(isCartEmpty());
+	const [cartEmpty, setCartEmpty] = useState(true);
 	const [cart, setCart] = useState([]);
 
-	useEffect(() => {
-		const cartData = getCart();
-		if (cartData) {
-			setCart(cartData);
-		}
-	}, []);
+	useEffect(() => {}, []);
 
 	useEffect(() => {
 		async function getUserInfo() {
@@ -47,7 +36,10 @@ export default function NavBar() {
 			<Headroom>
 				<nav className="navbar navbar-light shadow">
 					<div className="container-left">
-						<Link to={'/'} className="title">
+						<Link
+							to={'/'}
+							className="title"
+						>
 							SOIL
 						</Link>
 						<ul>
@@ -140,7 +132,7 @@ export default function NavBar() {
 								)}
 							</HorizontalCenter>
 							{/*Have to reload page to see update --- Sorry :) */}
-							<div className="quantity">${getTotalPrice().toFixed(2)}</div>
+							<div className="quantity">${}</div>
 						</Link>
 					</div>
 				</nav>

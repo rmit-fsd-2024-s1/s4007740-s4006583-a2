@@ -40,6 +40,7 @@ exports.create = async (req, res) => {
 		password_hash: hash,
 		doj: doj,
 		admin: false,
+		cart: '',
 	});
 
 	res.json(user);
@@ -63,6 +64,7 @@ exports.findOrCreate = async (req, res) => {
 			password_hash: hash,
 			doj: doj,
 			admin: false,
+			cart: '',
 		},
 	});
 
@@ -78,12 +80,14 @@ exports.upsert = async (req, res) => {
 
 	let doj = '';
 	let admin = false;
+	let cart = '';
 
 	let user = await db.user.findByPk(req.body.uuid);
 
 	if (user !== null) {
 		doj = user.doj;
 		admin = user.admin;
+		cart = user.cart;
 	}
 
 	user = await db.user.upsert({
@@ -93,7 +97,19 @@ exports.upsert = async (req, res) => {
 		password_hash: hash,
 		doj: doj,
 		admin: admin,
+		cart: cart,
 	});
+
+	res.json(user);
+};
+
+exports.updateCart = async (req, res) => {
+	const user = await db.user.findByPk(req.body.uuid);
+
+	if (user !== null) {
+		user.cart = req.body.cart;
+		await user.save();
+	}
 
 	res.json(user);
 };
