@@ -25,25 +25,37 @@ function readAndGetOrder(orderString: string) {
 }
 
 function editOrder(orderString: string, itemID: string, itemQuantity: string) {
-	let order = readAndGetOrder(orderString);
-	let newOrder = [];
+	const order = orderString === null ? [] : readAndGetOrder(orderString);
+	const newOrder = [];
 	let found = false;
 	for (const item of order) {
 		if (item.id === itemID) {
-			newOrder.push({ id: itemID, quantity: itemQuantity });
+			itemQuantity === ''
+				? newOrder.push({ id: itemID, quantity: 1 + Number(item.quantity) })
+				: Number(itemQuantity) + Number(item.quantity) <= 0 ||
+				  itemQuantity === 'remove'
+				? null
+				: newOrder.push({
+						id: itemID,
+						quantity: Number(itemQuantity) + Number(item.quantity),
+				  });
 			found = true;
 		} else {
 			newOrder.push({ id: item.id, quantity: item.quantity });
 		}
 	}
 	if (!found) {
-		newOrder.push({ id: itemID, quantity: itemQuantity });
+		itemQuantity === ''
+			? newOrder.push({ id: itemID, quantity: 1 })
+			: newOrder.push({ id: itemID, quantity: itemQuantity });
 	}
 
 	let newOrderDetails = '';
 
 	for (const item of newOrder) {
-		newOrderDetails.concat('@', item.id, '$', item.quantity, ';');
+		if (item.id !== '') {
+			newOrderDetails += '@' + item.id + '$' + item.quantity + ';';
+		}
 	}
 
 	return newOrderDetails;

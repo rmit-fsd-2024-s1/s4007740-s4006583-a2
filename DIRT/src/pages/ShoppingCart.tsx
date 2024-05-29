@@ -4,7 +4,7 @@ import UserDataService from '../data/UserService';
 import '../styles/ShoppingCart.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import Footer from '../components/Footer';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function ShoppingCart() {
 	const [fields, setFields] = useState({
@@ -13,6 +13,8 @@ export default function ShoppingCart() {
 		dateYear: '',
 		cvc: '',
 	});
+
+	const [total, setTotal] = useState(0);
 
 	const handleInputChange = (event) => {
 		const name: 'number' | 'dateMonth' | 'dateYear' | 'cvc' = event.target.name;
@@ -51,8 +53,6 @@ export default function ShoppingCart() {
 				alert('Incorrect payment information');
 				return;
 			}
-			for (const item of cart) {
-			}
 		}
 	};
 
@@ -63,17 +63,23 @@ export default function ShoppingCart() {
 			if (user !== null) {
 				const cart = [];
 				const readCart = readAndGetOrder(user.cart);
+				let tempTotal = 0;
 				for (const item of readCart) {
-					const i = await ItemDataService.getOne(item.id);
-					if (i !== null) {
-						cart.push({
-							id: i.id,
-							name: i.name,
-							price: Number(i.price),
-							quantity: i.quantity,
-						});
+					if (item.id !== '') {
+						const i = await ItemDataService.getOne(item.id);
+						if (i !== null) {
+							cart.push({
+								id: String(i.id),
+								name: i.name,
+								price: Number(i.cost),
+								quantity: item.quantity,
+							});
+							tempTotal += Number(i.cost) * Number(item.quantity);
+						}
 					}
 				}
+				setTotal(tempTotal);
+				setCart(cart);
 			}
 		}
 	}
@@ -90,27 +96,19 @@ export default function ShoppingCart() {
 		}[]
 	>([]);
 
-	const incrementQuantity = (
-		cartItem: {
-			item_name: string;
-			item_desc: string;
-			cost: number;
-			category: string;
-			quantity: number;
-		},
-		incrementAmount: number
-	) => {
-		if (cartItem.quantity + incrementAmount >= 1) {
-			// setCartItemQuantity({
-			// 	item_name: cartItem.item_name,
-			// 	item_desc: cartItem.item_desc,
-			// 	cost: cartItem.cost,
-			// 	category: cartItem.category,
-			// 	quantity: cartItem.quantity + incrementAmount,
-			// });
-			// setCart(getCart());
+	async function incrementQuantity(id: string, newQuantity: string) {
+		const userInfo = getUser();
+		if (userInfo !== null) {
+			const user = await UserDataService.getUserFromUUID(userInfo);
+			if (user !== null) {
+				await UserDataService.updateCart({
+					uuid: userInfo,
+					cart: editOrder(user.cart, id, newQuantity),
+				});
+			}
 		}
-	};
+		await getCart();
+	}
 
 	return (
 		<>
@@ -120,15 +118,13 @@ export default function ShoppingCart() {
 					{cart.length === 0 ? (
 						<p style={{ minWidth: '25rem' }}>CART EMPTY</p>
 					) : (
-						cart.map((cartItem) => {
+						cart.map((item) => {
 							return (
 								<div className="cart-item">
 									<div style={{ minWidth: '5rem' }}>
-										{/* {cartItem.item_name.toUpperCase()} */}
+										{item.name.toUpperCase()}
 									</div>
-									<div style={{ minWidth: '5rem' }}>
-										Qty: {cartItem.quantity}
-									</div>
+									<div style={{ minWidth: '5rem' }}>Qty: {item.quantity}</div>
 									<div className="qty-change">
 										<button
 											style={{
@@ -137,7 +133,7 @@ export default function ShoppingCart() {
 												borderLeft: '1px solid rgba(0, 0, 0, 0.175)',
 											}}
 											onClick={() => {
-												// incrementQuantity(cartItem, -1);
+												incrementQuantity(item.id, String(-1));
 											}}
 										>
 											-
@@ -149,7 +145,7 @@ export default function ShoppingCart() {
 												borderRight: '1px solid rgba(0, 0, 0, 0.175)',
 											}}
 											onClick={() => {
-												// incrementQuantity(cartItem, 1);
+												incrementQuantity(item.id, String(1));
 											}}
 										>
 											+
@@ -159,8 +155,7 @@ export default function ShoppingCart() {
 										<button
 											className="remove-button"
 											onClick={() => {
-												// removeCartItem(cartItem.item_name);
-												// setCart(getCart());
+												incrementQuantity(item.id, 'remove');
 											}}
 										>
 											REMOVE
@@ -170,9 +165,7 @@ export default function ShoppingCart() {
 							);
 						})
 					)}
-					<div className="cart-item">
-						{/* Total price: ${getTotalPrice().toFixed(2)} */}
-					</div>
+					<div className="cart-item">Total price: ${total.toFixed(2)}</div>
 				</div>
 				<div className="cart-container-right">
 					<div
@@ -261,10 +254,7 @@ export default function ShoppingCart() {
 							></input>
 						</div>
 						<div>
-							<button
-								className="btn btn-success"
-								onClick={handleSubmit}
-							>
+							<button className="btn btn-success" onClick={handleSubmit}>
 								Pay
 							</button>
 						</div>

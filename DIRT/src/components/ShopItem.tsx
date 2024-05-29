@@ -39,6 +39,19 @@ export default function ShopItem({
 		setFields(temp);
 	};
 
+	async function addToCart() {
+		const userInfo = getUser();
+		if (userInfo !== null) {
+			const user = await UserDataService.getUserFromUUID(userInfo);
+			if (user !== null) {
+				await UserDataService.updateCart({
+					uuid: userInfo,
+					cart: editOrder(user.cart, item_id, fields.quantity),
+				});
+			}
+		}
+	}
+
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
@@ -47,19 +60,6 @@ export default function ShopItem({
 			alert('log in first');
 			return;
 		} else {
-			async function addToCart() {
-				const userInfo = getUser();
-				if (userInfo !== null) {
-					const user = await UserDataService.getUserFromUUID(userInfo);
-					if (user !== null) {
-						UserDataService.updateCart({
-							uuid: userInfo,
-							cart: editOrder(user.cart, item_id, fields.quantity),
-						});
-					}
-				}
-			}
-
 			addToCart();
 		}
 	};
@@ -77,11 +77,7 @@ export default function ShopItem({
 				}
 			>
 				{special ? (
-					<img
-						className="specialIcon"
-						src="/special.png"
-						alt="React Image"
-					/>
+					<img className="specialIcon" src="/special.png" alt="React Image" />
 				) : null}
 				<img
 					className="card-img-top"
@@ -109,10 +105,7 @@ export default function ShopItem({
 							setBuyHover(false);
 						}}
 					>
-						<button
-							onClick={handleSubmit}
-							className="buy-button"
-						>
+						<button onClick={handleSubmit} className="buy-button">
 							Add to cart
 						</button>
 						{buyHover === true ? (

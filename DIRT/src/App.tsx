@@ -19,14 +19,8 @@ export default function App() {
 					<div>
 						<NavBar />
 						<Routes>
-							<Route
-								path="/"
-								element={<Home />}
-							/>
-							<Route
-								path="/Profile"
-								element={<ProfilePage />}
-							/>
+							<Route path="/" element={<Home />} />
+							<Route path="/Profile" element={<ProfilePage />} />
 							<Route
 								path="/Profile/EditProfile"
 								element={
@@ -51,14 +45,8 @@ export default function App() {
 									</ProfilePage>
 								}
 							/>
-							<Route
-								path="/products"
-								element={<Products />}
-							/>
-							<Route
-								path="/ShoppingCart"
-								element={<ShoppingCart />}
-							/>
+							<Route path="/products" element={<Products />} />
+							<Route path="/ShoppingCart" element={<ShoppingCart />} />
 						</Routes>
 					</div>
 				</main>
