@@ -61,7 +61,7 @@ export default function App() {
 								element={<ShoppingCart />}
 							/>
 							<Route
-								path="/item/:id"
+								path="/products/item/:id"
 								element={<ItemDetails />}
 							/>
 						</Routes>

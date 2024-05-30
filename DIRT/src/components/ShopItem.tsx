@@ -66,8 +66,7 @@ export default function ShopItem({
 	};
 
 	const changePage = () => {
-		const currentPath = window.location.pathname;
-		window.location.href = `${currentPath}/item/${item_id}`;
+		window.location.href = `/products/item/${item_id}`;
 	};
 
 	const [buyHover, setBuyHover] = useState(false);

@@ -5,7 +5,6 @@ import Carousel from '../components/Carousel';
 import Footer from '../components/Footer';
 import { useEffect } from 'react';
 import ItemService from '../data/ItemService';
-import ReviewForm from '../components/ReviewForm';
 
 export default function Home() {
 	const [specials, setSpecials] = useState<
@@ -58,14 +57,6 @@ export default function Home() {
 
 		loadSpecials();
 	}, []);
-
-	const handleReviewSubmit = (review: {
-		description: string;
-		rating: number;
-	}) => {
-		console.log('Review submitted:', review);
-		// Handle the review submission (e.g., send to server)
-	};
 
 	return (
 		<>
@@ -146,8 +137,6 @@ export default function Home() {
 			<div>
 				<Carousel items={specials} />
 			</div>
-			<h2>Leave a Review</h2>
-			<ReviewForm onSubmit={handleReviewSubmit} />
 			<div>
 				<Footer />
 			</div>

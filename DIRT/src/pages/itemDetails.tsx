@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import ItemService from '../data/ItemService';
 import axios from 'axios';
 import ReviewForm from '../components/ReviewForm';
+import '../styles/ItemDetails.css';
 
 interface Item {
 	id: string;
@@ -26,11 +27,6 @@ const ItemDetails: React.FC = () => {
 				const itemData = await ItemService.getOne(id!);
 				setItem(itemData);
 				setLoading(false);
-				// const response = await axios.get<Item>(
-				// 	`http://localhost:4000/api/items/${id}`
-				// );
-				// setItem(response.data);
-				// setLoading(false);
 			} catch (err) {
 				setError('Failed to fetch item');
 				setLoading(false);
@@ -52,18 +48,41 @@ const ItemDetails: React.FC = () => {
 		return <div>No item found</div>;
 	}
 
+	const handleReviewSubmit = (review: {
+		description: string;
+		rating: number;
+	}) => {
+		console.log('Review submitted:', review);
+		// Handle the review submission (e.g., send to server)
+	};
+
 	return (
-		<div>
-			<h1>hi hi</h1>
-			<h1>hi hi</h1>
-			<h1>hi hi</h1>
-			console.log({item.name})<h1>{item.name}</h1>
-			<p>{item.desc}</p>
-			<p>Category: {item.cat}</p>
-			<p>Price: ${item.cost.toFixed(2)}</p>
-			<p>Special: {item.special ? 'Yes' : 'No'}</p>
-			<h2>Leave a Review</h2>
-			<ReviewForm onSubmit={handleReviewSubmit} />
+		<div className="item-details-container">
+			<img
+				src={`/items/${item.name}.jpg`}
+				alt={item.name}
+				className="item-image"
+			/>
+
+			<div className="item-info">
+				<h1 className="item-name">{item.name}</h1>
+				<p className="item-category">{item.cat}</p>
+				<p className="item-desc">{item.desc}</p>
+				<div className="price-container">
+					<span className="item-price">${item.cost.toFixed(2)}</span>
+					{item.special && (
+						<span className="item-price-old">
+							${(item.cost * 1.2).toFixed(2)}
+						</span>
+					)}
+				</div>
+				{item.special && <div className="special-indicator">Special</div>}
+				<button className="add-to-cart-btn">Add to Cart</button>
+			</div>
+			<div>
+				<h2>Leave a Review</h2>
+				<ReviewForm onSubmit={handleReviewSubmit} />
+			</div>
 		</div>
 	);
 };
