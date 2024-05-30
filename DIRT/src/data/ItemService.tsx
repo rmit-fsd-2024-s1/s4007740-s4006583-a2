@@ -9,7 +9,7 @@ async function getAll() {
 }
 
 async function getOne(id: string) {
-	const response = await axios.get(API_HOST + '/api/items/select/' + id);
+	const response = await axios.get(API_HOST + '/api/items/' + id);
 
 	return response.data;
 }

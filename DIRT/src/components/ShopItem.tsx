@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getUser, editOrder, readAndGetOrder } from '../data/repository';
 import UserDataService from '../data/UserService';
 import '../styles/ShopItem.css';
@@ -65,8 +66,8 @@ export default function ShopItem({
 	};
 
 	const changePage = () => {
-		window.location.href = '/itemDetails';
-		// ADD ONCE READY/${item_name}`;
+		const currentPath = window.location.pathname;
+		window.location.href = `${currentPath}/item/${item_id}`;
 	};
 
 	const [buyHover, setBuyHover] = useState(false);
@@ -82,7 +83,11 @@ export default function ShopItem({
 				}
 			>
 				{special ? (
-					<img className="specialIcon" src="/special.png" alt="React Image" />
+					<img
+						className="specialIcon"
+						src="/special.png"
+						alt="React Image"
+					/>
 				) : null}
 				<img
 					className="card-img-top"
@@ -111,7 +116,10 @@ export default function ShopItem({
 							setBuyHover(false);
 						}}
 					>
-						<button onClick={handleSubmit} className="buy-button">
+						<button
+							onClick={handleSubmit}
+							className="buy-button"
+						>
 							Add to cart
 						</button>
 						{buyHover === true ? (
@@ -124,9 +132,6 @@ export default function ShopItem({
 								placeholder="Qty"
 							></input>
 						) : null}
-					</div>
-					<div className="review">
-						<button /*onClick={handleSubmit}*/>Review</button>
 					</div>
 				</div>
 			</div>

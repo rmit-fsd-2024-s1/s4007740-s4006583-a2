@@ -6,7 +6,7 @@ module.exports = (express, app) => {
 	router.get('/', controller.all);
 
 	// Select specific item with id
-	router.get('/select/:id', controller.one);
+	router.get('/:id', controller.one);
 
 	// Add routes to server.
 	app.use('/api/items', router);
