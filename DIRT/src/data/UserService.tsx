@@ -47,6 +47,8 @@ async function upsert(user: {
 
 async function updateCart(user: { uuid: string; cart: string }) {
 	const response = await axios.post(API_HOST + '/api/users/updateCart', user);
+
+	return response.data;
 }
 
 async function findOrCreate(user: {

@@ -1,20 +1,13 @@
-const { sequelize } = require('..');
-
 module.exports = (sequelize, DataTypes) =>
-	sequelize.define('order', {
-		id: {
-			type: DataTypes.NUMBER,
-			primaryKey: true,
-		},
-		uuid: {
-			type: DataTypes.STRING(36),
-			allowNull: false,
-			references: {
-				model: 'users',
-				key: 'uuid',
+	sequelize.define(
+		'order',
+		{
+			order: {
+				type: DataTypes.STRING(250),
 			},
 		},
-		order: {
-			type: DataTypes.STRING(250),
-		},
-	});
+		{
+			// Don't add the timestamp attributes (updatedAt, createdAt).
+			timestamps: false,
+		}
+	);

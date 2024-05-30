@@ -1,10 +1,11 @@
 import { editOrder, getUser, readAndGetOrder } from '../data/repository';
 import ItemDataService from '../data/ItemService';
 import UserDataService from '../data/UserService';
+import OrderDataService from '../data/OrderService';
 import '../styles/ShoppingCart.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import Footer from '../components/Footer';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ShoppingCart() {
 	const [fields, setFields] = useState({
@@ -38,6 +39,29 @@ export default function ShoppingCart() {
 		setFields(temp);
 	};
 
+	async function finishOrder() {
+		const userInfo = getUser();
+		if (userInfo !== null) {
+			const user = await UserDataService.getUserFromUUID(userInfo);
+			if (user !== null) {
+				console.log(user);
+				const order = {
+					uuid: userInfo,
+					order: user.cart,
+				};
+				await OrderDataService.create(order);
+				await UserDataService.updateCart({ uuid: userInfo, cart: '' });
+				await getCart();
+				setFields({
+					number: '',
+					dateMonth: '',
+					dateYear: '',
+					cvc: '',
+				});
+			}
+		}
+	}
+
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
@@ -49,6 +73,7 @@ export default function ShoppingCart() {
 				!isNaN(+fields.cvc)
 			) {
 				alert('Payment successful');
+				finishOrder();
 			} else {
 				alert('Incorrect payment information');
 				return;

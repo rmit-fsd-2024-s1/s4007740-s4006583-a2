@@ -22,6 +22,8 @@ app.get('/', (req, res) => {
 require('./src/routes/user.routes.js')(express, app);
 // Add item routes
 require('./src/routes/item.routes.js')(express, app);
+// Add order routes
+require('./src/routes/order.routes.js')(express, app);
 
 // Set port, listen for requests.
 const PORT = 4000;
