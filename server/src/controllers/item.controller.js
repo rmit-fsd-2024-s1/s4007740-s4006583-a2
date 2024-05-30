@@ -15,6 +15,13 @@ exports.one = async (req, res) => {
 	res.json(item);
 };
 
+// Select item from the database using cat.
+exports.getByCategory = async (req, res) => {
+	const item = await db.item.findAll({ where: { cat: req.params.cat } });
+
+	res.json(item);
+};
+
 // Create a user in the database.
 exports.create = async (req, res) => {
 	const item = await db.item.create({

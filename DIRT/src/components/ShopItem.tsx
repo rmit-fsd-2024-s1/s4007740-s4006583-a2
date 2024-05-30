@@ -77,6 +77,11 @@ export default function ShopItem({
 		}
 	};
 
+	const changePage = () => {
+		window.location.href = '/itemDetails';
+		// ADD ONCE READY/${item_name}`;
+	};
+
 	const [buyHover, setBuyHover] = useState(false);
 
 	return (
@@ -100,6 +105,7 @@ export default function ShopItem({
 					className="card-img-top"
 					src={'/items/' + item_name + '.jpg'}
 					alt="Card image cap"
+					onClick={changePage}
 				></img>
 				<div className="card-body">
 					<h5 className="card-title">{item_name.toUpperCase()}</h5>

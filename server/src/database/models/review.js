@@ -35,6 +35,8 @@ module.exports = (sequelize, DataTypes) =>
 			// 		key: 'id',
 			// 	},
 			// },
+
+			//USE REACT QUILL TO GENERATE FORM
 		},
 		{
 			// Don't add the timestamp attributes (updatedAt, createdAt).
