@@ -4,13 +4,8 @@ import LoginForm from './LoginForm';
 import SignUpForm from './SignupForm';
 import { useState, useEffect } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
-import {
-	getCart,
-	isCartEmpty,
-	removeUser,
-	getUser,
-	getTotalPrice,
-} from '../data/repository';
+import { removeUser, getUser, readAndGetOrder } from '../data/repository';
+import ItemDataService from '../data/ItemService';
 import UserDataService from '../data/UserService';
 import Headroom from 'react-headroom';
 import { HorizontalCenter } from './Center';
@@ -19,14 +14,32 @@ export default function NavBar() {
 	const [username, setUsername] = useState('');
 	const [loginVisible, setLoginVisible] = useState(false);
 	const [signupVisible, setSignupVisible] = useState(false);
-	const [cartEmpty, setCartEmpty] = useState(isCartEmpty());
-	const [cart, setCart] = useState([]);
+	const [cartEmpty, setCartEmpty] = useState(true);
+	const [cartTotal, setCartTotal] = useState(0);
 
 	useEffect(() => {
-		const cartData = getCart();
-		if (cartData) {
-			setCart(cartData);
+		async function getTotal() {
+			const userInfo = getUser();
+			if (userInfo !== null) {
+				const user = await UserDataService.getUserFromUUID(userInfo);
+				if (user !== null) {
+					const readCart = readAndGetOrder(user.cart);
+					let tempTotal = 0;
+					for (const item of readCart) {
+						if (item.id !== '') {
+							const i = await ItemDataService.getOne(item.id);
+							if (i !== null) {
+								tempTotal += Number(i.cost) * Number(item.quantity);
+							}
+						}
+					}
+					setCartTotal(tempTotal);
+				}
+			}
 		}
+		getTotal();
+
+		console.log(cartTotal);
 	}, []);
 
 	useEffect(() => {
@@ -123,24 +136,13 @@ export default function NavBar() {
 							style={{ minWidth: '10rem', borderRadius: '5px' }}
 						>
 							<HorizontalCenter>
-								{cartEmpty ? (
-									<img
-										className="cart"
-										src="/cart_empty.png"
-										alt="React Image"
-										style={{ margin: '1rem' }}
-									/>
-								) : (
-									<img
-										className="cart"
-										src="/cart_full.png"
-										alt="React Image"
-										style={{ margin: '1rem' }}
-									/>
-								)}
+								<img
+									className="cart"
+									src="/cart_empty.png"
+									alt="React Image"
+									style={{ margin: '1rem' }}
+								/>
 							</HorizontalCenter>
-							{/*Have to reload page to see update --- Sorry :) */}
-							<div className="quantity">${getTotalPrice().toFixed(2)}</div>
 						</Link>
 					</div>
 				</nav>

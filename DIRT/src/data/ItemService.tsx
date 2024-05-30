@@ -8,6 +8,13 @@ async function getAll() {
 	return response.data;
 }
 
+async function getOne(id: string) {
+	const response = await axios.get(API_HOST + '/api/items/select/' + id);
+
+	return response.data;
+}
+
 export default {
 	getAll,
+	getOne,
 };

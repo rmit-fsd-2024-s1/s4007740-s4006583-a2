@@ -1,17 +1,11 @@
 import { useState } from 'react';
-import {
-	addCartItem,
-	getCart,
-	getCartItem,
-	getUser,
-	initCart,
-	findSpecials,
-	setCartItemQuantity,
-} from '../data/repository';
+import { getUser, editOrder, readAndGetOrder } from '../data/repository';
+import UserDataService from '../data/UserService';
 import '../styles/ShopItem.css';
 import SignUpForm from './SignupForm';
 
 interface Props {
+	item_id: string;
 	item_name: string;
 	item_desc: string;
 	cost: number;
@@ -20,6 +14,7 @@ interface Props {
 }
 
 export default function ShopItem({
+	item_id = '',
 	item_name = '',
 	item_desc = '',
 	cost = 0,
@@ -44,6 +39,19 @@ export default function ShopItem({
 		setFields(temp);
 	};
 
+	async function addToCart() {
+		const userInfo = getUser();
+		if (userInfo !== null) {
+			const user = await UserDataService.getUserFromUUID(userInfo);
+			if (user !== null) {
+				await UserDataService.updateCart({
+					uuid: userInfo,
+					cart: editOrder(user.cart, item_id, fields.quantity),
+				});
+			}
+		}
+	}
+
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
@@ -51,29 +59,8 @@ export default function ShopItem({
 			setShowSignIn(true);
 			alert('log in first');
 			return;
-		}
-
-		initCart();
-		if (getCartItem(item_name) !== -1) {
-			setCartItemQuantity({
-				item_name: item_name,
-				item_desc: item_desc,
-				cost: cost,
-				category: category,
-				quantity:
-					fields.quantity === ''
-						? 1 + getCart()[getCartItem(item_name)].quantity
-						: +fields.quantity + getCart()[getCartItem(item_name)].quantity,
-			});
 		} else {
-			addCartItem(item_name, item_desc, cost, category);
-			setCartItemQuantity({
-				item_name: item_name,
-				item_desc: item_desc,
-				cost: cost,
-				category: category,
-				quantity: fields.quantity === '' ? 1 : +fields.quantity,
-			});
+			addToCart();
 		}
 	};
 
@@ -95,11 +82,7 @@ export default function ShopItem({
 				}
 			>
 				{special ? (
-					<img
-						className="specialIcon"
-						src="/special.png"
-						alt="React Image"
-					/>
+					<img className="specialIcon" src="/special.png" alt="React Image" />
 				) : null}
 				<img
 					className="card-img-top"
@@ -128,10 +111,7 @@ export default function ShopItem({
 							setBuyHover(false);
 						}}
 					>
-						<button
-							onClick={handleSubmit}
-							className="buy-button"
-						>
+						<button onClick={handleSubmit} className="buy-button">
 							Add to cart
 						</button>
 						{buyHover === true ? (

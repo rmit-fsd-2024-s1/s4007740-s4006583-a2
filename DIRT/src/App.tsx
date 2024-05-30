@@ -9,12 +9,10 @@ import NavBar from './components/NavBar';
 import ShoppingCart from './pages/ShoppingCart';
 import ItemDetails from './pages/itemDetails';
 import { useEffect, useState } from 'react';
-import { getUniqueItemCount, isCartEmpty } from './data/repository';
+
 import { Nav } from 'react-bootstrap';
 
 export default function App() {
-	const cartEmpty = isCartEmpty();
-
 	return (
 		<div>
 			<Router>

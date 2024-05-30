@@ -23,6 +23,8 @@ module.exports = (express, app) => {
 	// Update an existing user or add user if one doesn't exist
 	router.post('/upsert', controller.upsert);
 
+	router.post('/updateCart', controller.updateCart);
+
 	// Delete a user
 	router.post('/destroy', controller.destroy);
 
