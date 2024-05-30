@@ -7,7 +7,7 @@ import EditProfile from './pages/profile-pages/EditProfile';
 import Products from './pages/Products';
 import NavBar from './components/NavBar';
 import ShoppingCart from './pages/ShoppingCart';
-import ItemDetails from './pages/itemDetails';
+import ItemDetails from './pages/ItemDetails';
 import { useEffect, useState } from 'react';
 
 import { Nav } from 'react-bootstrap';
@@ -61,7 +61,7 @@ export default function App() {
 								element={<ShoppingCart />}
 							/>
 							<Route
-								path="/ItemDetails"
+								path="/products/item/:id"
 								element={<ItemDetails />}
 							/>
 						</Routes>

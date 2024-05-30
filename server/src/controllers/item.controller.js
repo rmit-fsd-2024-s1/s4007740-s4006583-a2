@@ -11,8 +11,11 @@ exports.all = async (req, res) => {
 // Select one user from the database.
 exports.one = async (req, res) => {
 	const item = await db.item.findByPk(req.params.id);
-
-	res.json(item);
+	if (item) {
+		res.json(item);
+	} else {
+		res.status(404).send('Item not found');
+	}
 };
 
 // Select item from the database using cat.
