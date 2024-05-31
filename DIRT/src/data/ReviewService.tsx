@@ -23,7 +23,9 @@ async function getByUUID(uuid: string) {
 }
 
 async function getByItemId(itemId: string) {
-	const response = await axios.get(API_HOST + '/api/reviews/itemId/' + itemId);
+	const response = await axios.get(
+		API_HOST + '/api/reviews/selectItemId/' + itemId
+	);
 
 	return response.data;
 }

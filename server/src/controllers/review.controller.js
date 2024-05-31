@@ -22,7 +22,7 @@ exports.create = async (req, res) => {
 };
 
 exports.getByUUID = async (req, res) => {
-	const review = await db.order.findAll({
+	const review = await db.review.findAll({
 		where: { userUuid: req.params.uuid },
 	});
 
@@ -30,7 +30,7 @@ exports.getByUUID = async (req, res) => {
 };
 
 exports.getByItemId = async (req, res) => {
-	const review = await db.order.findAll({
+	const review = await db.review.findAll({
 		where: { itemId: req.params.itemId },
 	});
 

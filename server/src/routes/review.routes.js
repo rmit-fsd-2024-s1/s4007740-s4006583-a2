@@ -6,7 +6,7 @@ module.exports = (express, app) => {
 
 	router.get('/selectUUID/:uuid', controller.getByUUID);
 
-	router.get('/selectItemID/:itemId', controller.getByItemId);
+	router.get('/selectItemId/:itemId', controller.getByItemId);
 
 	router.post('/create', controller.create);
 

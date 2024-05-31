@@ -22,20 +22,32 @@ interface Item {
 const ItemDetails: React.FC<{ userId: string }> = () => {
 	const { id } = useParams<{ id: string }>();
 	const [item, setItem] = useState<Item | null>(null);
+	const [reviews, setReviews] = useState<
+		| {
+				description: string;
+				rating: number;
+				date: string;
+				userUuid: string;
+				itemId: string;
+		  }[]
+		| null
+	>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const fetchItem = async () => {
+		async function fetchItem() {
 			try {
 				const itemData = await ItemDataService.getOne(id!);
 				setItem(itemData);
+				const reviewData = await ReviewDataService.getByItemId('2');
+				setReviews(reviewData);
 				setLoading(false);
 			} catch (err) {
 				setError('Failed to fetch item');
 				setLoading(false);
 			}
-		};
+		}
 
 		fetchItem();
 	}, [id]);
@@ -153,6 +165,14 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 				<button className="add-to-cart-btn">Add to Cart</button>
 				<div className="viewReview">
 					<h2>Reviews</h2>
+					{reviews?.map((review) => {
+						return (
+							<>
+								<p>{review.description}</p>
+								<p>{review.rating}</p>
+							</>
+						);
+					})}
 				</div>
 			</div>
 			<div>
