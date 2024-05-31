@@ -1,11 +1,14 @@
 // frontend/src/pages/ItemDetails.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import ItemService from '../data/ItemService';
+import ItemDataService from '../data/ItemService';
+import UserDataService from '../data/UserService';
+import ReviewDataService from '../data/ReviewService';
 import axios from 'axios';
 import Footer from '../components/Footer';
 import ReviewForm from '../components/ReviewForm';
 import '../styles/ItemDetails.css';
+import { getUser, removeUser } from '../data/repository';
 
 interface Item {
 	id: string;
@@ -25,7 +28,7 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 	useEffect(() => {
 		const fetchItem = async () => {
 			try {
-				const itemData = await ItemService.getOne(id!);
+				const itemData = await ItemDataService.getOne(id!);
 				setItem(itemData);
 				setLoading(false);
 			} catch (err) {
@@ -53,8 +56,38 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 		description: string;
 		rating: number;
 	}) => {
-		console.log('Review submitted:', review);
 		// Handle the review submission (e.g., send to server)
+		async function submitReview() {
+			const userInfo = getUser();
+			if (userInfo !== null) {
+				const user = await UserDataService.getUserFromUUID(userInfo);
+				if (user !== null) {
+					if (id !== undefined) {
+						const today = new Date();
+						const dd = String(today.getDate()).padStart(2, '0'); // Day (padded with leading zero if needed)
+						const mm = String(today.getMonth() + 1).padStart(2, '0'); // Month (January is 0, so we add 1)
+						const yyyy = today.getFullYear(); // Year
+
+						const dor = dd + '/' + mm + '/' + yyyy;
+						console.log(review);
+						console.log(id);
+						await ReviewDataService.create({
+							description: review.description,
+							rating: review.rating,
+							date: dor,
+							userUuid: userInfo,
+							itemId: id,
+						});
+					}
+				} else {
+					removeUser();
+					location.assign('/');
+				}
+			} else {
+				alert('You need to be logged in to leave a review');
+			}
+		}
+		submitReview();
 	};
 
 	const backButton = () => {

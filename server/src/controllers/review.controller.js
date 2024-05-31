@@ -1,17 +1,38 @@
 const db = require('../database');
 
+exports.all = async (req, res) => {
+	const reviews = await db.review.findAll();
+
+	res.json(reviews);
+};
+
 // Create a review in the database.
-exports.createReview = async (req, res) => {
-	try {
-		const review = await db.review.create({
-			userId: req.body.userId,
-			itemId: req.body.itemId,
-			description: req.body.description,
-			rating: req.body.rating,
-			date: req.body.date,
-		});
-		res.status(201).json(review);
-	} catch (error) {
-		res.status(500).json({ message: 'Failed to create review', error });
-	}
+exports.create = async (req, res) => {
+	console.log(req.body);
+	const review = await db.review.create({
+		id: (await db.review.count()) + 1,
+		description: req.body.description,
+		rating: req.body.rating,
+		date: req.body.date,
+		userUuid: req.body.userUuid,
+		itemId: req.body.itemId,
+	});
+
+	res.json(review);
+};
+
+exports.getByUUID = async (req, res) => {
+	const review = await db.order.findAll({
+		where: { userUuid: req.params.uuid },
+	});
+
+	res.json(review);
+};
+
+exports.getByItemId = async (req, res) => {
+	const review = await db.order.findAll({
+		where: { itemId: req.params.itemId },
+	});
+
+	res.json(review);
 };

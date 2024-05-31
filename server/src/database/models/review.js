@@ -6,9 +6,8 @@ module.exports = (sequelize, DataTypes) =>
 				type: DataTypes.INTEGER,
 				primaryKey: true,
 			},
-			desc: {
+			description: {
 				type: DataTypes.STRING(700),
-				primaryKey: false,
 				allowNull: false,
 			},
 			rating: {
@@ -19,22 +18,6 @@ module.exports = (sequelize, DataTypes) =>
 				type: DataTypes.STRING(40),
 				allowNull: false,
 			},
-			// customer_id: {
-			// 	type: DataTypes.STRING(36),
-			// 	allowNull: false,
-			// 	references: {
-			// 		model: 'users',
-			// 		key: 'uuid',
-			// 	},
-			// },
-			// item_id: {
-			// 	type: DataTypes.INTEGER,
-			// 	allowNull: false,
-			// 	references: {
-			// 		model: 'items',
-			// 		key: 'id',
-			// 	},
-			// },
 
 			//USE REACT QUILL TO GENERATE FORM
 		},

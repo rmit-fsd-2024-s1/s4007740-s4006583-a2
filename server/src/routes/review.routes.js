@@ -1,18 +1,15 @@
 module.exports = (express, app) => {
-	const itemController = require('../controllers/item.controller.js');
-	const reviewController = require('../controllers/review.controller.js');
+	const controller = require('../controllers/review.controller.js');
 	const router = express.Router();
 
-	// Existing routes...
-	router.get('/api/items', itemController.all);
-	router.get('/api/items/:id', itemController.one);
-	router.get('/api/items/category/:cat', itemController.getByCategory);
-	router.post('/api/items', itemController.create);
-	router.put('/api/items/:id', itemController.upsert);
+	router.get('/', controller.all);
 
-	// Add review route
-	router.post('/api/reviews', reviewController.createReview);
+	router.get('/selectUUID/:uuid', controller.getByUUID);
+
+	router.get('/selectItemID/:itemId', controller.getByItemId);
+
+	router.post('/create', controller.create);
 
 	// Add routes to server.
-	app.use('/', router);
+	app.use('/api/reviews', router);
 };
