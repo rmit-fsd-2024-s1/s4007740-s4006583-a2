@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ItemService from '../data/ItemService';
 import axios from 'axios';
+import Footer from '../components/Footer';
 import ReviewForm from '../components/ReviewForm';
 import '../styles/ItemDetails.css';
 
@@ -63,7 +64,20 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 	return (
 		<>
 			<div>
-				<button onClick={backButton}>Back</button>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="50"
+					height="50"
+					fill="currentColor"
+					className="back-arrow"
+					viewBox="0 0 16 16"
+					onClick={backButton}
+				>
+					<path
+						fillRule="evenodd"
+						d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
+					/>
+				</svg>
 			</div>
 			<div className="item-details-container">
 				<img
@@ -71,17 +85,38 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 					alt={item.name}
 					className="item-image"
 				/>
-				{item.special && <div className="special-indicator">Special</div>}
-				<div>
+				{item.special ? (
+					<img
+						className="specialDetails"
+						src="/special.png"
+						alt="React Image"
+					/>
+				) : null}
+				<div className="reviewSec">
 					<h2>Leave a Review</h2>
 					<ReviewForm onSubmit={handleReviewSubmit} />
 				</div>
 			</div>
 			<div className="item-order-container">
 				<div className="item-info">
-					<h1 className="item-name">{item.name}</h1>
-					<p className="item-category">{item.cat}</p>
-					<p className="item-desc">{item.desc}</p>
+					<h1
+						className="item-name"
+						style={{ textTransform: 'capitalize' }}
+					>
+						{item.name}
+					</h1>
+					<p
+						className="item-category"
+						style={{ textTransform: 'capitalize' }}
+					>
+						{item.cat}
+					</p>
+					<p
+						className="item-desc"
+						style={{ textTransform: 'capitalize' }}
+					>
+						{item.desc}
+					</p>
 				</div>
 				<div className="price-container">
 					<span className="item-price">${item.cost.toFixed(2)}</span>
@@ -90,8 +125,14 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 							${(item.cost * 1.2).toFixed(2)}
 						</span>
 					)}
-					<button className="add-to-cart-btn">Add to Cart</button>
 				</div>
+				<button className="add-to-cart-btn">Add to Cart</button>
+				<div className="viewReview">
+					<h2>Reviews</h2>
+				</div>
+			</div>
+			<div>
+				<Footer />
 			</div>
 		</>
 	);

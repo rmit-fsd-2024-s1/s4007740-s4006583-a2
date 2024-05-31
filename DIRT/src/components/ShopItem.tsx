@@ -75,11 +75,11 @@ export default function ShopItem({
 		<>
 			<div
 				className="card"
-				style={
-					special
-						? { backgroundColor: '#FDFD96' }
-						: { backgroundColor: 'white' }
-				}
+				style={{
+					backgroundColor: special
+						? 'rgba(255, 205, 70, 0.65)'
+						: 'rgba(255, 255, 255, 1)',
+				}}
 			>
 				{special ? (
 					<img
@@ -93,6 +93,7 @@ export default function ShopItem({
 					src={'/items/' + item_name + '.jpg'}
 					alt="Card image cap"
 					onClick={changePage}
+					style={{ cursor: 'pointer' }}
 				></img>
 				<div className="card-body">
 					<h5 className="card-title">{item_name.toUpperCase()}</h5>

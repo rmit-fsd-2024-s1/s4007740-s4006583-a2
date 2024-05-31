@@ -104,9 +104,9 @@ export default function products() {
 					/>
 				))}
 			</div>
-			<div>
+			{/* <div>
 				<Footer />
-			</div>
+			</div> */}
 		</>
 	);
 }

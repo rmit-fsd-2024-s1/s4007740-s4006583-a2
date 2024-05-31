@@ -2,7 +2,6 @@
 	transition-duration: 0.25s;
 
 	background-color: #f3f3f3;
-
 	display: flex;
 	justify-content: space-between; /* Align items at the start and end of the flex container */
 	align-items: center; /* Center items vertically */

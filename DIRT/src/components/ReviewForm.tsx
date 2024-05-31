@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/ReviewForm.css';
 
 interface ReviewFormProps {
 	onSubmit: (review: { description: string; rating: number }) => void;
@@ -28,36 +29,51 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
 		setError(null);
 	};
 
+	const stars = document.querySelectorAll('.stars i');
+	stars.forEach((star, index1) => {
+		star.addEventListener('click', () => {
+			stars.forEach((star, index2) => {
+				index1 >= index2
+					? star.classList.add('active')
+					: star.classList.remove('active');
+			});
+		});
+	});
+
 	return (
-		<form onSubmit={handleSubmit}>
-			<div>
+		<form
+			className="review-form"
+			onSubmit={handleSubmit}
+		>
+			<div className="form-group">
 				<label htmlFor="description">Description:</label>
 				<textarea
 					id="description"
+					className="form-control"
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 				/>
 			</div>
-			<div>
+			<div className="form-group">
 				<label htmlFor="rating">Rating:</label>
-				<select
-					id="rating"
-					value={rating ?? ''}
-					onChange={(e) => setRating(Number(e.target.value))}
-				>
-					<option value="">Select a rating</option>
+				<div className="stars">
 					{[1, 2, 3, 4, 5].map((num) => (
-						<option
+						<i
 							key={num}
-							value={num}
-						>
-							{num}
-						</option>
+							className="fa-solid fa-star"
+							data-value={num}
+							onClick={() => setRating(num)}
+						></i>
 					))}
-				</select>
+				</div>
 			</div>
-			{error && <div style={{ color: 'red' }}>{error}</div>}
-			<button type="submit">Submit Review</button>
+			{error && <div className="error-message">{error}</div>}
+			<button
+				className="submit-button"
+				type="submit"
+			>
+				Submit Review
+			</button>
 		</form>
 	);
 };

@@ -132,7 +132,7 @@ export default function Home() {
 				</div>
 			</div>
 			<div className="prodTitle">
-				<h2>Week specials</h2>
+				<h2>Weekly specials</h2>
 			</div>
 			<div>
 				<Carousel items={specials} />
