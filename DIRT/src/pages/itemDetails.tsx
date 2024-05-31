@@ -40,7 +40,7 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 			try {
 				const itemData = await ItemDataService.getOne(id!);
 				setItem(itemData);
-				const reviewData = await ReviewDataService.getByItemId('2');
+				const reviewData = await ReviewDataService.getByItemId(id!);
 				setReviews(reviewData);
 				setLoading(false);
 			} catch (err) {
