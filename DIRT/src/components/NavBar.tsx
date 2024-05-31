@@ -18,31 +18,6 @@ export default function NavBar() {
 	const [cartTotal, setCartTotal] = useState(0);
 
 	useEffect(() => {
-		async function getTotal() {
-			const userInfo = getUser();
-			if (userInfo !== null) {
-				const user = await UserDataService.getUserFromUUID(userInfo);
-				if (user !== null) {
-					const readCart = readAndGetOrder(user.cart);
-					let tempTotal = 0;
-					for (const item of readCart) {
-						if (item.id !== '') {
-							const i = await ItemDataService.getOne(item.id);
-							if (i !== null) {
-								tempTotal += Number(i.cost) * Number(item.quantity);
-							}
-						}
-					}
-					setCartTotal(tempTotal);
-				}
-			}
-		}
-		getTotal();
-
-		console.log(cartTotal);
-	}, []);
-
-	useEffect(() => {
 		async function getUserInfo() {
 			const userInfo = getUser();
 			if (userInfo !== null) {

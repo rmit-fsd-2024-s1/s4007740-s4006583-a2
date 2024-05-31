@@ -1,19 +1,26 @@
 const db = require('../database');
 const argon2 = require('argon2');
 
+exports.all = async (req, res) => {
+	const orders = await db.order.findAll();
+
+	res.json(orders);
+};
+
 exports.create = async (req, res) => {
+	console.log(req.body.uuid);
 	const order = await db.order.create({
-		id: '1',
+		id: (await db.order.count()) + 1,
 		order: req.body.order,
-		userUUID: '759257dd-f044-47e3-ba84-fcdd7b2559a6',
+		userUuid: req.body.uuid,
 	});
 
 	res.json(order);
 };
 
 exports.getByUUID = async (req, res) => {
-	const order = await db.order.findOne({
-		where: { userUUID: req.params.uuid },
+	const order = await db.order.findAll({
+		where: { userUuid: req.params.uuid },
 	});
 
 	res.json(order);

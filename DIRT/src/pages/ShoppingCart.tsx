@@ -42,9 +42,9 @@ export default function ShoppingCart() {
 	async function finishOrder() {
 		const userInfo = getUser();
 		if (userInfo !== null) {
+			console.log(userInfo);
 			const user = await UserDataService.getUserFromUUID(userInfo);
 			if (user !== null) {
-				console.log(user);
 				const order = {
 					uuid: userInfo,
 					order: user.cart,
@@ -96,7 +96,7 @@ export default function ShoppingCart() {
 							cart.push({
 								id: String(i.id),
 								name: i.name,
-								price: Number(i.cost),
+								cost: Number(i.cost),
 								quantity: item.quantity,
 							});
 							tempTotal += Number(i.cost) * Number(item.quantity);
@@ -116,7 +116,7 @@ export default function ShoppingCart() {
 		{
 			id: string;
 			name: string;
-			price: number;
+			cost: number;
 			quantity: string;
 		}[]
 	>([]);
