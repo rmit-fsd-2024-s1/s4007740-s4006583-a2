@@ -8,21 +8,18 @@ import { useEffect, useState } from 'react';
 import { getUser, readAndGetOrder } from '../../data/repository';
 
 export default function OrderHistory() {
-	const [orders, setOrders] = useState<
+	const [finalOrders, setFinalOrders] = useState<
 		{
-			id: string;
-			order: string;
-			userUuid: string;
+			order: {
+				id: string;
+				name: string;
+				cost: number;
+				quantity: string;
+			}[];
+			orderTotal: number;
 		}[]
 	>([]);
-	const [items, setItems] = useState<
-		{
-			id: string;
-			name: string;
-			cost: number;
-			quantity: string;
-		}[]
-	>([]);
+
 	const [total, setTotal] = useState(0);
 
 	async function getOrders() {
@@ -30,9 +27,38 @@ export default function OrderHistory() {
 		if (userInfo !== null) {
 			const user = await UserDataService.getUserFromUUID(userInfo);
 			if (user !== null) {
-				const o = await OrderDataService.getByUUID(userInfo);
-				if (o !== null) {
-					setOrders(o);
+				const orders = await OrderDataService.getByUUID(userInfo);
+				if (orders !== null) {
+					const o: {
+						order: {
+							id: string;
+							name: string;
+							cost: number;
+							quantity: string;
+						}[];
+						orderTotal: number;
+					}[] = [];
+					for (let i = 0; i < orders.length; i++) {
+						const readOrder = readAndGetOrder(orders[i].order);
+						const order = [];
+						let total = 0;
+						for (const item of readOrder) {
+							if (item.id !== '') {
+								const i = await ItemDataService.getOne(item.id);
+								if (i !== null) {
+									order.push({
+										id: String(i.id),
+										name: i.name,
+										cost: Number(i.cost),
+										quantity: item.quantity,
+									});
+									total += Number(i.cost) * Number(item.quantity);
+								}
+							}
+						}
+						o.push({ order: order, orderTotal: total });
+					}
+					setFinalOrders(o);
 				}
 			}
 		}
@@ -44,57 +70,53 @@ export default function OrderHistory() {
 
 	return (
 		<div className="Container">
-			{orders.map((order, index) => {
-				async function readOrder() {
-					const ord = [];
-					const rOrder = readAndGetOrder(order.order);
-					let tempTotal = 0;
-					for (const item of rOrder) {
-						if (item.id !== '') {
-							const i = await ItemDataService.getOne(item.id);
-							if (i !== null) {
-								ord.push({
-									id: String(i.id),
-									name: i.name,
-									cost: Number(i.cost),
-									quantity: item.quantity,
-								});
-								tempTotal += Number(i.cost) * Number(item.quantity);
-							}
-						}
-					}
-					setTotal(tempTotal);
-					setItems(ord);
-				}
-				readOrder();
-				return (
-					<div
-						className="cart-container"
-						style={{ justifyContent: 'space-around' }}
-					>
+			{finalOrders.map(
+				(
+					orders: {
+						order: {
+							id: string;
+							name: string;
+							cost: number;
+							quantity: string;
+						}[];
+						orderTotal: number;
+					},
+					index
+				) => {
+					return (
 						<div
-							className="cart-container-left"
-							style={{
-								border: 'none',
-								borderBottom: '1px solid rgba(0, 0, 0, 0.175)',
-							}}
+							className="cart-container"
+							style={{ justifyContent: 'space-around' }}
 						>
-							<h1>Order {index + 1}</h1>
-							{items.map((item) => {
-								return (
-									<div className="cart-item">
-										<div style={{ minWidth: '5rem' }}>
-											{item.name.toUpperCase()}
+							<div
+								className="cart-container-left"
+								style={{
+									border: 'none',
+									borderBottom: '1px solid rgba(0, 0, 0, 0.175)',
+								}}
+							>
+								<h1>Order {index + 1}</h1>
+								{orders.order.map((item) => {
+									return (
+										<div className="cart-item">
+											<div style={{ minWidth: '5rem' }}>{item.name}</div>
+											<div style={{ minWidth: '5rem' }}>
+												Qty: {item.quantity}
+											</div>
 										</div>
-										<div style={{ minWidth: '5rem' }}>Qty: {item.quantity}</div>
-									</div>
-								);
-							})}
-							<div className="cart-item">Total price: ${total.toFixed(2)}</div>
+									);
+								})}
+								<div
+									className="cart-item"
+									style={{ justifyContent: 'space-around' }}
+								>
+									Total price: ${orders.orderTotal.toFixed(2)}
+								</div>
+							</div>
 						</div>
-					</div>
-				);
-			})}
+					);
+				}
+			)}
 		</div>
 	);
 }
