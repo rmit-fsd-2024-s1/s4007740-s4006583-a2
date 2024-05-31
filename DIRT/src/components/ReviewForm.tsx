@@ -10,11 +10,22 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
 	const [rating, setRating] = useState<number | null>(null);
 	const [error, setError] = useState<string | null>(null);
 
+	//Added checks to ensure both description and rating exist, and description length is valid
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		if (!description) {
 			setError('Description is required.');
+			return;
+		}
+
+		if (description.length < 5) {
+			setError('Description is too short');
+			return;
+		}
+
+		if (description.length > 200) {
+			setError('Description is too long');
 			return;
 		}
 
@@ -28,7 +39,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
 		setRating(null);
 		setError(null);
 	};
-
+	//FIX stars to reset after submission
+	// const handleStarClick = (index: number) => {
+	// 	setRating(index + 1);
+	// };
 	const stars = document.querySelectorAll('.stars i');
 	stars.forEach((star, index1) => {
 		star.addEventListener('click', () => {

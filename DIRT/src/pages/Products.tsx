@@ -41,10 +41,25 @@ export default function products() {
 		loadProducts();
 	}, []);
 
-	const filteredProducts =
+	let filteredProducts;
+
+	// Check if only the "Special" category is selected
+	const onlySpecialSelected =
+		selectedCategories.length === 1 && selectedCategories[0] === 'special';
+
+	// Filter products based on selected categories
+	const categoryFilteredProducts =
 		selectedCategories.length > 0
-			? products.filter((products) => selectedCategories.includes(products.cat))
+			? products.filter((product) => selectedCategories.includes(product.cat))
 			: products;
+
+	// If only the "Special" category is selected, show all specials
+	if (onlySpecialSelected) {
+		filteredProducts = products.filter((product) => product.special);
+	} else {
+		filteredProducts = categoryFilteredProducts;
+	}
+	//AAKLJAHGFIU WHY WONT THIS WORK. Fix such that filter works
 
 	return (
 		<>
@@ -82,6 +97,16 @@ export default function products() {
 							checked={selectedCategories.includes('seeds')}
 						/>
 						<label>Seeds</label>
+					</li>
+					<li>
+						<input
+							className="checkbox"
+							type="checkbox"
+							value="special"
+							onChange={() => handleFilter('special')}
+							checked={selectedCategories.includes('special')}
+						/>
+						<label>Special</label>
 					</li>
 				</ul>
 			</div>
