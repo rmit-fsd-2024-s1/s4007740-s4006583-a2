@@ -144,13 +144,22 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 			</div>
 			<div className="item-order-container">
 				<div className="item-info">
-					<h1 className="item-name" style={{ textTransform: 'capitalize' }}>
+					<h1
+						className="item-name"
+						style={{ textTransform: 'capitalize' }}
+					>
 						{item.name}
 					</h1>
-					<p className="item-category" style={{ textTransform: 'capitalize' }}>
+					<p
+						className="item-category"
+						style={{ textTransform: 'capitalize' }}
+					>
 						{item.cat}
 					</p>
-					<p className="item-desc" style={{ textTransform: 'capitalize' }}>
+					<p
+						className="item-desc"
+						style={{ textTransform: 'capitalize' }}
+					>
 						{item.desc}
 					</p>
 				</div>
