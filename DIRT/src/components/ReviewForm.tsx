@@ -1,4 +1,3 @@
-// frontend/src/components/ReviewForm.tsx
 import React, { useState } from 'react';
 
 interface ReviewFormProps {

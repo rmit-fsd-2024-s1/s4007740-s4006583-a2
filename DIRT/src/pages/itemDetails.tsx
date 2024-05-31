@@ -15,7 +15,7 @@ interface Item {
 	special: boolean;
 }
 
-const ItemDetails: React.FC = () => {
+const ItemDetails: React.FC<{ userId: string }> = () => {
 	const { id } = useParams<{ id: string }>();
 	const [item, setItem] = useState<Item | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -56,18 +56,33 @@ const ItemDetails: React.FC = () => {
 		// Handle the review submission (e.g., send to server)
 	};
 
-	return (
-		<div className="item-details-container">
-			<img
-				src={`/items/${item.name}.jpg`}
-				alt={item.name}
-				className="item-image"
-			/>
+	const backButton = () => {
+		window.location.href = `/products`;
+	};
 
-			<div className="item-info">
-				<h1 className="item-name">{item.name}</h1>
-				<p className="item-category">{item.cat}</p>
-				<p className="item-desc">{item.desc}</p>
+	return (
+		<>
+			<div>
+				<button onClick={backButton}>Back</button>
+			</div>
+			<div className="item-details-container">
+				<img
+					src={`/items/${item.name}.jpg`}
+					alt={item.name}
+					className="item-image"
+				/>
+				{item.special && <div className="special-indicator">Special</div>}
+				<div>
+					<h2>Leave a Review</h2>
+					<ReviewForm onSubmit={handleReviewSubmit} />
+				</div>
+			</div>
+			<div className="item-order-container">
+				<div className="item-info">
+					<h1 className="item-name">{item.name}</h1>
+					<p className="item-category">{item.cat}</p>
+					<p className="item-desc">{item.desc}</p>
+				</div>
 				<div className="price-container">
 					<span className="item-price">${item.cost.toFixed(2)}</span>
 					{item.special && (
@@ -75,15 +90,10 @@ const ItemDetails: React.FC = () => {
 							${(item.cost * 1.2).toFixed(2)}
 						</span>
 					)}
+					<button className="add-to-cart-btn">Add to Cart</button>
 				</div>
-				{item.special && <div className="special-indicator">Special</div>}
-				<button className="add-to-cart-btn">Add to Cart</button>
 			</div>
-			<div>
-				<h2>Leave a Review</h2>
-				<ReviewForm onSubmit={handleReviewSubmit} />
-			</div>
-		</div>
+		</>
 	);
 };
 

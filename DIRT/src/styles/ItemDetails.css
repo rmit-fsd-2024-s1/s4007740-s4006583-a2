@@ -9,10 +9,26 @@
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	max-width: 600px;
 	margin: 20px auto;
+	position: absolute;
+	left: 50px;
+}
+
+.item-order-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
+	background-color: #f8f9fa;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	max-width: 600px;
+	margin: 20px auto;
+	position: absolute;
+	right: 20vw;
 }
 
 .item-image {
-	width: 100%;
+	width: 80%;
 	height: auto;
 	border-radius: 10px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
