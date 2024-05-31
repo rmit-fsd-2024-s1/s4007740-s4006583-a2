@@ -18,7 +18,9 @@
 }
 
 .password-text {
-	-webkit-text-security: disc;
+	/*-webkit-text-security: disc;*/
+	color: gray;
+	font-style: italic;
 }
 
 .edit-btn {

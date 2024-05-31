@@ -29,7 +29,7 @@ export default function EditProfile() {
 		}
 		getUserInfo();
 	}, []);
-
+	//password variable {userInfo.password_hash}
 	return (
 		<>
 			<div className="EditProfile">
@@ -45,7 +45,7 @@ export default function EditProfile() {
 					</div>
 					<div className="AccountDetail">
 						<p style={{ fontSize: '12px' }}>Password</p>
-						<p className="password-text">{userInfo.password_hash}</p>
+						<p className="password-text">Password hidden</p>
 					</div>
 					<div className="AccountDetail">
 						<p style={{ fontSize: '12px' }}>Date Joined</p>
