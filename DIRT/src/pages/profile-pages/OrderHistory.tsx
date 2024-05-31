@@ -99,7 +99,9 @@ export default function OrderHistory() {
 								{orders.order.map((item) => {
 									return (
 										<div className="cart-item">
-											<div style={{ minWidth: '5rem' }}>{item.name}</div>
+											<div style={{ minWidth: '5rem' }}>
+												{item.name.toUpperCase()}
+											</div>
 											<div style={{ minWidth: '5rem' }}>
 												Qty: {item.quantity}
 											</div>
