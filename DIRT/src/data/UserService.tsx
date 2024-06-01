@@ -76,8 +76,8 @@ async function login(email: string, password: string) {
 	return user;
 }
 
-async function destroy() {
-	const response = await axios.post(API_HOST, '/api/users/destroy');
+async function destroy(user: { uuid: string; password: string }) {
+	const response = await axios.post(API_HOST + '/api/users/destroy', user);
 
 	return response.data;
 }

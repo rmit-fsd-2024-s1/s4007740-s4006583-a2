@@ -24,10 +24,6 @@ export default function NavBar() {
 				const user = await UserDataService.getUserFromUUID(userInfo);
 				if (user !== null) {
 					setUsername(user.name);
-				} else {
-					alert('User no longer exists');
-					removeUser();
-					location.assign('/');
 				}
 			}
 		}

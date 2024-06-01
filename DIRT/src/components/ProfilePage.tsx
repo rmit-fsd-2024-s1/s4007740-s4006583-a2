@@ -27,23 +27,11 @@ export default function ProfilePage({
 				</div>
 				<div className="BottomPart">
 					<div className="LeftNavBar">
-						<Link
-							to="/Profile/EditProfile"
-							className="LeftNavBar-Button"
-						>
+						<Link to="/Profile/EditProfile" className="LeftNavBar-Button">
 							<button className="LeftNavBar-Button">My Profile</button>
 						</Link>
-						<Link
-							to="/Profile/OrderHistory"
-							className="LeftNavBar-Button"
-						>
+						<Link to="/Profile/OrderHistory" className="LeftNavBar-Button">
 							<button className="LeftNavBar-Button">Order History</button>
-						</Link>
-						<Link
-							to="/Profile/CustomDiets"
-							className="LeftNavBar-Button"
-						>
-							<button className="LeftNavBar-Button">Custom Diets</button>
 						</Link>
 					</div>
 					<div className="MainFocus">{children}</div>
