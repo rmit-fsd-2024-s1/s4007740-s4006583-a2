@@ -2,7 +2,7 @@ import { CSSProperties, useState } from 'react';
 import Popup from './Popup';
 import '../styles/LoginForm.css';
 import CloseButton from './CloseButton';
-import { getUser } from '../data/repository';
+import { getUser, removeUser } from '../data/repository';
 import UserDataService from '../data/UserService';
 import ReviewDataService from '../data/ReviewService';
 import OrderDataService from '../data/OrderService';
@@ -56,6 +56,7 @@ export default function DeleteProfileForm({
 								const userReturn = await UserDataService.destroy({
 									uuid: user.uuid,
 								});
+								removeUser();
 							}
 						}
 					}
