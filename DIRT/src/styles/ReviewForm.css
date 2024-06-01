@@ -27,10 +27,6 @@
 	box-sizing: border-box;
 }
 
-.form-control textarea {
-	height: 100px;
-}
-
 .error-message {
 	color: red;
 	margin-bottom: 1rem;
@@ -43,7 +39,6 @@
 }
 .stars i {
 	color: #e6e6e6;
-	font-size: 35px;
 	cursor: pointer;
 	transition: color 0.2s ease;
 }

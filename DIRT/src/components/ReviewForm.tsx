@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/ReviewForm.css';
+import { FaStar } from 'react-icons/fa';
 
 interface ReviewFormProps {
 	onSubmit: (review: { description: string; rating: number }) => void;
+	reset: boolean;
+	initialData?: { description: string; rating: number } | null;
 }
 
-const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
+const ReviewForm: React.FC<ReviewFormProps> = ({
+	onSubmit,
+	reset,
+	initialData,
+}) => {
 	const [description, setDescription] = useState('');
 	const [rating, setRating] = useState<number | null>(null);
 	const [error, setError] = useState<string | null>(null);
 
-	//Added checks to ensure both description and rating exist, and description length is valid
+	useEffect(() => {
+		if (initialData) {
+			setDescription(initialData.description);
+			setRating(initialData.rating);
+		} else {
+			setDescription('');
+			setRating(0);
+		}
+	}, [initialData, reset]);
+
+	useEffect(() => {
+		if (reset) {
+			setDescription('');
+			setRating(null);
+		}
+	}, [reset]);
+
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
@@ -39,20 +62,6 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
 		setRating(null);
 		setError(null);
 	};
-	//FIX stars to reset after submission
-	// const handleStarClick = (index: number) => {
-	// 	setRating(index + 1);
-	// };
-	const stars = document.querySelectorAll('.stars i');
-	stars.forEach((star, index1) => {
-		star.addEventListener('click', () => {
-			stars.forEach((star, index2) => {
-				index1 >= index2
-					? star.classList.add('active')
-					: star.classList.remove('active');
-			});
-		});
-	});
 
 	return (
 		<form
@@ -64,6 +73,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
 				<textarea
 					id="description"
 					className="form-control"
+					style={{ height: '200px' }}
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 				/>
@@ -71,13 +81,16 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
 			<div className="form-group">
 				<label htmlFor="rating">Rating:</label>
 				<div className="stars">
-					{[1, 2, 3, 4, 5].map((num) => (
-						<i
-							key={num}
-							className="fa-solid fa-star"
-							data-value={num}
-							onClick={() => setRating(num)}
-						></i>
+					{[1, 2, 3, 4, 5].map((star) => (
+						<FaStar
+							key={star}
+							style={{
+								cursor: 'pointer',
+								fontSize: '35px',
+								color: star <= (rating || 0) ? '#ff9c1a' : '#e6e6e6',
+							}}
+							onClick={() => setRating(star)}
+						/>
 					))}
 				</div>
 			</div>

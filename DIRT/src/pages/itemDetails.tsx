@@ -1,10 +1,8 @@
-// frontend/src/pages/ItemDetails.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ItemDataService from '../data/ItemService';
 import UserDataService from '../data/UserService';
 import ReviewDataService from '../data/ReviewService';
-import axios from 'axios';
 import Footer from '../components/Footer';
 import ReviewForm from '../components/ReviewForm';
 import '../styles/ItemDetails.css';
@@ -19,29 +17,48 @@ interface Item {
 	special: boolean;
 }
 
-const ItemDetails: React.FC<{ userId: string }> = () => {
+interface Review {
+	id: string;
+	description: string;
+	rating: number;
+	date: string;
+	userUuid: string;
+	userName?: string;
+	itemId: string;
+}
+
+const ItemDetails: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
 	const [item, setItem] = useState<Item | null>(null);
-	const [reviews, setReviews] = useState<
-		| {
-				description: string;
-				rating: number;
-				date: string;
-				userUuid: string;
-				itemId: string;
-		  }[]
-		| null
-	>(null);
+	const [reviews, setReviews] = useState<Review[] | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+	const [successMessage, setSuccessMessage] = useState<string | null>(null);
+	const [resetReviewForm, setResetReviewForm] = useState<boolean>(false);
+	const [editPopupVisible, setEditPopupVisible] = useState<boolean>(false);
+	const [currentReview, setCurrentReview] = useState<Review | null>(null);
+	const [userId, setUserId] = useState<string | null>(null);
 
 	useEffect(() => {
 		async function fetchItem() {
 			try {
 				const itemData = await ItemDataService.getOne(id!);
 				setItem(itemData);
+
 				const reviewData = await ReviewDataService.getByItemId(id!);
-				setReviews(reviewData);
+
+				// Fetch usernames for each review
+				const reviewsWithUsernames = await Promise.all(
+					reviewData.map(async (review: { userUuid: string }) => {
+						const user = await UserDataService.getUserFromUUID(review.userUuid);
+						return {
+							...review,
+							userName: user.name, // Assuming the user object has a name property
+						};
+					})
+				);
+
+				setReviews(reviewsWithUsernames);
 				setLoading(false);
 			} catch (err) {
 				setError('Failed to fetch item');
@@ -51,6 +68,19 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 
 		fetchItem();
 	}, [id]);
+
+	useEffect(() => {
+		async function getUserInfo() {
+			const userInfo = getUser();
+			if (userInfo !== null) {
+				const user = await UserDataService.getUserFromUUID(userInfo);
+				if (user !== null) {
+					setUserId(user.uuid);
+				}
+			}
+		}
+		getUserInfo();
+	}, []);
 
 	if (loading) {
 		return <div>Loading...</div>;
@@ -68,7 +98,6 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 		description: string;
 		rating: number;
 	}) => {
-		// Handle the review submission (e.g., send to server)
 		async function submitReview() {
 			const userInfo = getUser();
 			if (userInfo !== null) {
@@ -76,13 +105,11 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 				if (user !== null) {
 					if (id !== undefined) {
 						const today = new Date();
-						const dd = String(today.getDate()).padStart(2, '0'); // Day (padded with leading zero if needed)
-						const mm = String(today.getMonth() + 1).padStart(2, '0'); // Month (January is 0, so we add 1)
-						const yyyy = today.getFullYear(); // Year
-
+						const dd = String(today.getDate()).padStart(2, '0');
+						const mm = String(today.getMonth() + 1).padStart(2, '0');
+						const yyyy = today.getFullYear();
 						const dor = dd + '/' + mm + '/' + yyyy;
-						console.log(review);
-						console.log(id);
+
 						await ReviewDataService.create({
 							description: review.description,
 							rating: review.rating,
@@ -90,6 +117,12 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 							userUuid: userInfo,
 							itemId: id,
 						});
+						setSuccessMessage('Review submitted successfully!');
+						setResetReviewForm(true);
+						setTimeout(() => {
+							setSuccessMessage(null);
+							setResetReviewForm(false);
+						}, 3000);
 					}
 				} else {
 					removeUser();
@@ -102,9 +135,91 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 		submitReview();
 	};
 
+	const handleEditButtonClick = (review: Review) => {
+		setCurrentReview(review);
+		setEditPopupVisible(true);
+	};
+
+	const handleEditSubmit = (review: {
+		description: string;
+		rating: number;
+	}) => {
+		async function updateReview() {
+			if (currentReview && id !== undefined) {
+				await ReviewDataService.upsert(currentReview.itemId, {
+					...currentReview,
+					description: review.description,
+					rating: review.rating,
+				});
+				setSuccessMessage('Review updated successfully!');
+				setEditPopupVisible(false);
+				setTimeout(() => {
+					setSuccessMessage(null);
+				}, 3000);
+			}
+		}
+		updateReview();
+	};
+
+	const handleDeleteButtonClick = (review: Review) => {
+		async function deleteReview() {
+			const result = await ReviewDataService.destroyOne({ id: review.id });
+
+			if (result.success) {
+				setSuccessMessage('Review deleted successfully!');
+				setReviews(
+					(prevReviews) =>
+						prevReviews?.filter((r) => r.id !== review.id) || null
+				);
+				setTimeout(() => {
+					setSuccessMessage(null);
+				}, 3000);
+			} else {
+				setError('Failed to delete review');
+			}
+		}
+		deleteReview();
+		console.log('delete review');
+	};
+
+	const reviewEndThingy = (review: Review, userId: string | null) => {
+		if (review.userUuid === userId) {
+			return (
+				<>
+					<button
+						className="review-btn"
+						style={{ borderColor: '#ff9c1a', color: '#ff9c1a' }}
+						onClick={() => handleEditButtonClick(review)}
+					>
+						Edit
+					</button>
+					<button
+						className="review-btn"
+						style={{ borderColor: 'red', color: 'red' }}
+						onClick={() => handleDeleteButtonClick(review)}
+					>
+						Delete
+					</button>
+				</>
+			);
+		}
+		return (
+			<button
+				className="review-btn"
+				style={{ borderColor: '#218838', color: '#218838' }}
+				onClick={() => handleDeleteButtonClick(review)}
+			>
+				Follow User
+			</button>
+		);
+	};
+
 	const backButton = () => {
 		window.location.href = `/products`;
 	};
+
+	const leftParen = '(';
+	const rightParen = ')';
 
 	return (
 		<>
@@ -124,69 +239,88 @@ const ItemDetails: React.FC<{ userId: string }> = () => {
 					/>
 				</svg>
 			</div>
-			<div className="item-details-container">
-				<img
-					src={`/items/${item.name}.jpg`}
-					alt={item.name}
-					className="item-image"
-				/>
-				{item.special ? (
+			<div className="parent-container">
+				<div className="item-details-container">
 					<img
-						className="specialDetails"
-						src="/special.png"
-						alt="React Image"
+						src={`/items/${item.name}.jpg`}
+						alt={item.name}
+						className="item-image"
 					/>
-				) : null}
-				<div className="reviewSec">
-					<h2>Leave a Review</h2>
-					<ReviewForm onSubmit={handleReviewSubmit} />
-				</div>
-			</div>
-			<div className="item-order-container">
-				<div className="item-info">
-					<h1
-						className="item-name"
-						style={{ textTransform: 'capitalize' }}
-					>
-						{item.name}
-					</h1>
-					<p
-						className="item-category"
-						style={{ textTransform: 'capitalize' }}
-					>
-						{item.cat}
-					</p>
-					<p
-						className="item-desc"
-						style={{ textTransform: 'capitalize' }}
-					>
-						{item.desc}
-					</p>
-				</div>
-				<div className="price-container">
-					<span className="item-price">${item.cost.toFixed(2)}</span>
 					{item.special && (
-						<span className="item-price-old">
-							${(item.cost * 1.2).toFixed(2)}
-						</span>
+						<img
+							className="specialDetails"
+							src="/special.png"
+							alt="Special Item"
+						/>
 					)}
+					<div className="item-info">
+						<h1 className="item-name">{item.name}</h1>
+						<p className="item-category">{item.cat}</p>
+						<p className="item-desc">{item.desc}</p>
+					</div>
+					<div className="price-container">
+						<span className="item-price">${item.cost.toFixed(2)}</span>
+						{item.special && (
+							<span className="item-price-old">
+								${(item.cost * 1.2).toFixed(2)}
+							</span>
+						)}
+					</div>
+					<button className="add-to-cart-btn">Add to Cart</button>
 				</div>
-				<button className="add-to-cart-btn">Add to Cart</button>
-				<div className="viewReview">
-					<h2>Reviews</h2>
-					{reviews?.map((review) => {
-						return (
-							<>
-								<p>{review.description}</p>
-								<p>{review.rating}</p>
-							</>
-						);
-					})}
+				<div className="item-order-container">
+					<div className="reviewSec">
+						<h2 style={{ fontWeight: 'bold', marginBottom: '2rem' }}>
+							Leave a Review
+						</h2>
+						<ReviewForm
+							onSubmit={handleReviewSubmit}
+							reset={resetReviewForm}
+						/>
+						{successMessage && (
+							<div className="success-message">{successMessage}</div>
+						)}
+					</div>
 				</div>
 			</div>
-			<div>
-				<Footer />
+			<div className="viewReview">
+				<h2 style={{ fontWeight: 'bold', textAlign: 'center' }}>Reviews</h2>
+				<div className="reviewContainer">
+					{reviews?.map((review, index) => (
+						<div
+							className="reviewItem"
+							key={index}
+						>
+							<p className="userName">{review.userName}</p>
+							<p className="reviewDesc">{review.description}</p>
+							<p className="reviewRating">
+								Stars: {leftParen}
+								{review.rating}
+								{rightParen}
+							</p>
+							{reviewEndThingy(review, userId)}
+						</div>
+					))}
+				</div>
 			</div>
+			{editPopupVisible && (
+				<div className="edit-popup">
+					<div className="edit-popup-content">
+						<h2>Edit Review</h2>
+						<ReviewForm
+							onSubmit={handleEditSubmit}
+							reset={resetReviewForm}
+							initialData={currentReview}
+						/>
+						<button
+							onClick={() => setEditPopupVisible(false)}
+							className="close-popup-btn"
+						>
+							Close
+						</button>
+					</div>
+				</div>
+			)}
 		</>
 	);
 };

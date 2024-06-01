@@ -14,6 +14,17 @@ async function create(review: {
 	return response.data;
 }
 
+async function upsert(
+	id: string,
+	review: { description: string; rating: number }
+) {
+	const response = await axios.post(
+		`${API_HOST}/api/reviews/upsert/${id}`,
+		review
+	);
+	return response.data;
+}
+
 async function getByUUID(uuid: string) {
 	const response = await axios.get(
 		API_HOST + '/api/reviews/selectUUID/' + uuid
@@ -36,9 +47,20 @@ async function destroy(review: { uuid: string }) {
 	return response.data;
 }
 
+async function destroyOne(review: { id: string }) {
+	const response = await axios.post(
+		API_HOST + '/api/reviews/destroyOne',
+		review
+	);
+
+	return response.data;
+}
+
 export default {
 	create,
+	upsert,
 	getByUUID,
 	getByItemId,
 	destroy,
+	destroyOne,
 };

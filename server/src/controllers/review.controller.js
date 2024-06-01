@@ -44,3 +44,11 @@ exports.destroy = async (req, res) => {
 
 	res.json(review);
 };
+
+exports.destroyOne = async (req, res) => {
+	const review = await db.review.destroy({
+		where: { id: req.body.id },
+	});
+
+	res.json(review);
+};
