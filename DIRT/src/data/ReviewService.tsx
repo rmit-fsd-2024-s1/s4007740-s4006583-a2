@@ -30,8 +30,15 @@ async function getByItemId(itemId: string) {
 	return response.data;
 }
 
+async function destroy(review: { uuid: string }) {
+	const response = await axios.post(API_HOST + '/api/reviews/destroy', review);
+
+	return response.data;
+}
+
 export default {
 	create,
 	getByUUID,
 	getByItemId,
+	destroy,
 };

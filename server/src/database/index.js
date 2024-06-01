@@ -22,7 +22,7 @@ db.review.belongsTo(db.user, {
 	foreignKey: { userUuid: 'uuid', allowNull: false },
 });
 db.user.hasMany(db.review, {
-	onDelete: 'SET NULL',
+	hooks: true,
 	foreignKey: { userUuid: 'uuid', allowNull: false },
 });
 
@@ -30,7 +30,7 @@ db.review.belongsTo(db.item, {
 	foreignKey: { itemId: 'id', allowNull: false },
 });
 db.item.hasMany(db.review, {
-	onDelete: 'SET NULL',
+	hooks: true,
 	foreignKey: { itemId: 'id', allowNull: false },
 });
 
@@ -39,7 +39,7 @@ db.order.belongsTo(db.user, {
 });
 
 db.user.hasMany(db.order, {
-	onDelete: 'SET NULL',
+	hooks: true,
 	foreignKey: { userUuid: 'uuid', allowNull: false },
 });
 

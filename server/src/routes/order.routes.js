@@ -8,6 +8,8 @@ module.exports = (express, app) => {
 
 	router.get('/selectUUID/:uuid', controller.getByUUID);
 
+	router.post('/destroy', controller.destroy);
+
 	// Add routes to server
 	app.use('/api/orders', router);
 };

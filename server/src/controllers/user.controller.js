@@ -114,19 +114,25 @@ exports.updateCart = async (req, res) => {
 	res.json(user);
 };
 
-exports.destroy = async (req, res) => {
-	const user = await db.user.findByPk(req.body.uuid);
+exports.verify = async (req, res) => {
+	const user = await db.user.findByPk(req.query.uuid);
 
 	if (
 		user === null ||
-		(await argon2.verify(user.password_hash, req.body.password)) === false
+		(await argon2.verify(user.password_hash, req.query.password)) === false
 	)
-		// Login failed.
 		res.json(null);
 	else {
-		const userDestroy = await user.destroy();
-		res.json(userDestroy);
+		res.json(user);
 	}
+};
+
+exports.destroy = async (req, res) => {
+	const user = await db.user.destroy({
+		where: { uuid: req.body.uuid },
+	});
+
+	res.json(user);
 };
 
 // Select one user from the database if email and password are a match.

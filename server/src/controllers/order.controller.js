@@ -25,3 +25,11 @@ exports.getByUUID = async (req, res) => {
 
 	res.json(order);
 };
+
+exports.destroy = async (req, res) => {
+	const order = await db.order.destroy({
+		where: { userUuid: req.body.uuid },
+	});
+
+	res.json(order);
+};

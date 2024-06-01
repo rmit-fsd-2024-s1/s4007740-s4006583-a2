@@ -14,7 +14,14 @@ async function getByUUID(uuid: string) {
 	return response.data;
 }
 
+async function destroy(order: { uuid: string }) {
+	const response = await axios.post(API_HOST + '/api/orders/destroy', order);
+
+	return response.data;
+}
+
 export default {
 	create,
 	getByUUID,
+	destroy,
 };

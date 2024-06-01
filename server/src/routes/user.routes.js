@@ -14,6 +14,8 @@ module.exports = (express, app) => {
 	// Verify login
 	router.get('/login', controller.login);
 
+	router.get('/verify', controller.verify);
+
 	// Create a new user.
 	router.post('/create', controller.create);
 

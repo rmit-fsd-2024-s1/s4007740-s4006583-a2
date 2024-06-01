@@ -36,3 +36,11 @@ exports.getByItemId = async (req, res) => {
 
 	res.json(review);
 };
+
+exports.destroy = async (req, res) => {
+	const review = await db.review.destroy({
+		where: { userUuid: req.body.uuid },
+	});
+
+	res.json(review);
+};

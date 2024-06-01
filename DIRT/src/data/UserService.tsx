@@ -76,8 +76,16 @@ async function login(email: string, password: string) {
 	return user;
 }
 
-async function destroy(user: { uuid: string; password: string }) {
+async function destroy(user: { uuid: string }) {
 	const response = await axios.post(API_HOST + '/api/users/destroy', user);
+
+	return response.data;
+}
+
+async function verify(uuid: string, password: string) {
+	const response = await axios.get(API_HOST + '/api/users/verify', {
+		params: { uuid, password },
+	});
 
 	return response.data;
 }
@@ -92,4 +100,5 @@ export default {
 	getUserFromUUID,
 	getUserFromEmail,
 	destroy,
+	verify,
 };

@@ -4,6 +4,8 @@ import '../styles/LoginForm.css';
 import CloseButton from './CloseButton';
 import { getUser } from '../data/repository';
 import UserDataService from '../data/UserService';
+import ReviewDataService from '../data/ReviewService';
+import OrderDataService from '../data/OrderService';
 
 interface Props {
 	onExitClick?: () => void;
@@ -38,11 +40,28 @@ export default function DeleteProfileForm({
 			if (userInfo !== null) {
 				const user = await UserDataService.getUserFromUUID(userInfo);
 				if (fields.password === fields.confirmPassword && user !== null) {
-					await UserDataService.destroy({
-						uuid: userInfo,
-						password: fields.password,
-					});
-					location.assign('/');
+					const verify = await UserDataService.verify(
+						user.uuid,
+						fields.password
+					);
+					if (verify !== null) {
+						const orderReturn = await OrderDataService.destroy({
+							uuid: user.uuid,
+						});
+						if (orderReturn !== null) {
+							const reviewReturn = await ReviewDataService.destroy({
+								uuid: user.uuid,
+							});
+							if (reviewReturn !== null) {
+								const userReturn = await UserDataService.destroy({
+									uuid: user.uuid,
+								});
+							}
+						}
+					} else {
+						console.log('heyo');
+					}
+					// location.assign('/');
 				}
 			}
 		}
