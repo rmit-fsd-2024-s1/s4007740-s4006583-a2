@@ -5,7 +5,7 @@ import ItemDataService from '../../data/ItemService';
 import '../../styles/ShoppingCart.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { useEffect, useState } from 'react';
-import { getUser, readAndGetOrder } from '../../data/repository';
+import { getUser, readAndGetOrder, removeUser } from '../../data/repository';
 
 export default function OrderHistory() {
 	const [finalOrders, setFinalOrders] = useState<
@@ -60,7 +60,14 @@ export default function OrderHistory() {
 					}
 					setFinalOrders(o);
 				}
+			} else {
+				alert('User no longer exists');
+				removeUser();
+				location.assign('/');
 			}
+		} else {
+			alert('Must be logged in to use this page');
+			location.assign('/');
 		}
 	}
 

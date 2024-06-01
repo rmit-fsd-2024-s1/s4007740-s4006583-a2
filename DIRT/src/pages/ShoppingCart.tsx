@@ -1,4 +1,9 @@
-import { editOrder, getUser, readAndGetOrder } from '../data/repository';
+import {
+	editOrder,
+	getUser,
+	readAndGetOrder,
+	removeUser,
+} from '../data/repository';
 import ItemDataService from '../data/ItemService';
 import UserDataService from '../data/UserService';
 import OrderDataService from '../data/OrderService';
@@ -58,7 +63,14 @@ export default function ShoppingCart() {
 					dateYear: '',
 					cvc: '',
 				});
+			} else {
+				alert('User no longer exists');
+				removeUser();
+				location.assign('/');
 			}
+		} else {
+			alert('User must be logged in to use this page');
+			location.assign('/');
 		}
 	}
 

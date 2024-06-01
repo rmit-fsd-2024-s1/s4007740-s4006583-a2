@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUser, editOrder, readAndGetOrder } from '../data/repository';
+import {
+	getUser,
+	editOrder,
+	readAndGetOrder,
+	removeUser,
+} from '../data/repository';
 import UserDataService from '../data/UserService';
 import '../styles/ShopItem.css';
 import SignUpForm from './SignupForm';
@@ -49,20 +54,20 @@ export default function ShopItem({
 					uuid: userInfo,
 					cart: editOrder(user.cart, item_id, fields.quantity),
 				});
+			} else {
+				console.log('User no longer exists');
+				removeUser();
+				location.assign('/');
 			}
+		} else {
+			alert('User must be logged in first');
 		}
 	}
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
 
-		if (getUser() === null) {
-			setShowSignIn(true);
-			alert('log in first');
-			return;
-		} else {
-			addToCart();
-		}
+		addToCart();
 	};
 
 	const changePage = () => {
@@ -82,11 +87,7 @@ export default function ShopItem({
 				}}
 			>
 				{special ? (
-					<img
-						className="specialIcon"
-						src="/special.png"
-						alt="React Image"
-					/>
+					<img className="specialIcon" src="/special.png" alt="React Image" />
 				) : null}
 				<img
 					className="card-img-top"
@@ -116,10 +117,7 @@ export default function ShopItem({
 							setBuyHover(false);
 						}}
 					>
-						<button
-							onClick={handleSubmit}
-							className="buy-button"
-						>
+						<button onClick={handleSubmit} className="buy-button">
 							Add to cart
 						</button>
 						{buyHover === true ? (

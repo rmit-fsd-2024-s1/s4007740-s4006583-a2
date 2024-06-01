@@ -1,7 +1,7 @@
 import { HorizontalCenter } from '../../components/Center';
 import EditImg from '../../assets/edit.png';
 import '../../styles/EditProfile.css';
-import { getUser } from '../../data/repository';
+import { getUser, removeUser } from '../../data/repository';
 import EditProfileForm from '../../components/EditProfileForm';
 import { useEffect, useState } from 'react';
 import DeleteProfileForm from '../../components/DeleteProfileForm';
@@ -24,7 +24,13 @@ export default function EditProfile() {
 				const user = await UserDataService.getUserFromUUID(userInfo);
 				if (user !== null) {
 					setUserInfo(user);
+				} else {
+					alert('User no longer exists');
+					removeUser();
+					location.assign('/');
 				}
+			} else {
+				alert('Must be logged in to use this page');
 			}
 		}
 		getUserInfo();
