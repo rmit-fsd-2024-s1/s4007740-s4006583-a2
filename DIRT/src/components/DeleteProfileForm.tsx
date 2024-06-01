@@ -58,10 +58,8 @@ export default function DeleteProfileForm({
 								});
 							}
 						}
-					} else {
-						console.log('heyo');
 					}
-					// location.assign('/');
+					location.assign('/');
 				}
 			}
 		}
