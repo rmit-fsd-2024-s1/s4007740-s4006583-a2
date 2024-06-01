@@ -6,7 +6,7 @@ import ReviewDataService from '../data/ReviewService';
 import Footer from '../components/Footer';
 import ReviewForm from '../components/ReviewForm';
 import '../styles/ItemDetails.css';
-import { getUser, removeUser } from '../data/repository';
+import { getUser, removeUser, editOrder } from '../data/repository';
 
 interface Item {
 	id: string;
@@ -38,6 +38,50 @@ const ItemDetails: React.FC = () => {
 	const [editPopupVisible, setEditPopupVisible] = useState<boolean>(false);
 	const [currentReview, setCurrentReview] = useState<Review | null>(null);
 	const [userId, setUserId] = useState<string | null>(null);
+	const [fields, setFields] = useState({ quantity: '' });
+	const [showSignIn, setShowSignIn] = useState(false);
+
+	const handleInputChange = (event) => {
+		const quantity: 'quantity' = event.target.name;
+		const value = event.target.value;
+
+		const temp = { quantity: fields.quantity };
+
+		if (+value <= 0) {
+			temp[quantity] = '1';
+		} else {
+			temp[quantity] = value;
+		}
+
+		setFields(temp);
+	};
+
+	async function addToCart() {
+		const userInfo = getUser();
+		if (userInfo !== null) {
+			const user = await UserDataService.getUserFromUUID(userInfo);
+			if (user !== null) {
+				await UserDataService.updateCart({
+					uuid: userInfo,
+					cart: editOrder(user.cart, id, fields.quantity),
+				});
+			} else {
+				console.log('User no longer exists');
+				removeUser();
+				location.assign('/');
+			}
+		} else {
+			alert('User must be logged in first');
+		}
+	}
+
+	const handleSubmit = (event) => {
+		event.preventDefault();
+
+		addToCart();
+	};
+
+	const [buyHover, setBuyHover] = useState(false);
 
 	useEffect(() => {
 		async function fetchItem() {
@@ -266,7 +310,32 @@ const ItemDetails: React.FC = () => {
 							</span>
 						)}
 					</div>
-					<button className="add-to-cart-btn">Add to Cart</button>
+					<div
+						className="add-to-cart-btn"
+						onMouseEnter={() => {
+							setBuyHover(true);
+						}}
+						onMouseLeave={() => {
+							setBuyHover(false);
+						}}
+					>
+						<button
+							className="buy-section"
+							onClick={handleSubmit}
+						>
+							Add to Cart
+						</button>
+						{buyHover === true ? (
+							<input
+								type="number"
+								name="quantity"
+								style={{ maxWidth: '3rem' }}
+								value={fields.quantity}
+								onChange={handleInputChange}
+								placeholder="Qty"
+							></input>
+						) : null}
+					</div>
 				</div>
 				<div className="item-order-container">
 					<div className="reviewSec">

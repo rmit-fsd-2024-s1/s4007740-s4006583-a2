@@ -99,6 +99,28 @@
 
 .add-to-cart-btn:hover {
 	background-color: #218838;
+	width: 12rem;
+}
+
+.buy-section {
+	background-color: transparent;
+	color: white;
+	border: none;
+	display: inline-block;
+}
+
+.buy-section input {
+	border: none;
+	border-top: 1px solid rgba(0, 0, 0, 0.175);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.175);
+	border-right: 1px solid rgba(0, 0, 0, 0.175);
+	border-radius: 0px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.buy-section input:focus {
+	outline: none;
 }
 
 .viewReview {
