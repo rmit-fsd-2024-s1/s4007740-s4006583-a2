@@ -63,7 +63,7 @@ const ItemDetails: React.FC = () => {
 			if (user !== null) {
 				await UserDataService.updateCart({
 					uuid: userInfo,
-					cart: editOrder(user.cart, id, fields.quantity),
+					cart: editOrder(user.cart, id!, fields.quantity),
 				});
 			} else {
 				console.log('User no longer exists');
@@ -83,33 +83,33 @@ const ItemDetails: React.FC = () => {
 
 	const [buyHover, setBuyHover] = useState(false);
 
-	useEffect(() => {
-		async function fetchItem() {
-			try {
-				const itemData = await ItemDataService.getOne(id!);
-				setItem(itemData);
+	async function fetchItem() {
+		try {
+			const itemData = await ItemDataService.getOne(id!);
+			setItem(itemData);
 
-				const reviewData = await ReviewDataService.getByItemId(id!);
+			const reviewData = await ReviewDataService.getByItemId(id!);
 
-				// Fetch usernames for each review
-				const reviewsWithUsernames = await Promise.all(
-					reviewData.map(async (review: { userUuid: string }) => {
-						const user = await UserDataService.getUserFromUUID(review.userUuid);
-						return {
-							...review,
-							userName: user.name, // Assuming the user object has a name property
-						};
-					})
-				);
+			// Fetch usernames for each review
+			const reviewsWithUsernames = await Promise.all(
+				reviewData.map(async (review: { userUuid: string }) => {
+					const user = await UserDataService.getUserFromUUID(review.userUuid);
+					return {
+						...review,
+						userName: user.name, // Assuming the user object has a name property
+					};
+				})
+			);
 
-				setReviews(reviewsWithUsernames);
-				setLoading(false);
-			} catch (err) {
-				setError('Failed to fetch item');
-				setLoading(false);
-			}
+			setReviews(reviewsWithUsernames);
+			setLoading(false);
+		} catch (err) {
+			setError('Failed to fetch item');
+			setLoading(false);
 		}
+	}
 
+	useEffect(() => {
 		fetchItem();
 	}, [id]);
 
@@ -154,19 +154,21 @@ const ItemDetails: React.FC = () => {
 						const yyyy = today.getFullYear();
 						const dor = dd + '/' + mm + '/' + yyyy;
 
-						await ReviewDataService.create({
+						const reviewSubmitted = await ReviewDataService.create({
 							description: review.description,
 							rating: review.rating,
 							date: dor,
 							userUuid: userInfo,
 							itemId: id,
 						});
-						setSuccessMessage('Review submitted successfully!');
-						setResetReviewForm(true);
-						setTimeout(() => {
-							setSuccessMessage(null);
-							setResetReviewForm(false);
-						}, 3000);
+						if (reviewSubmitted !== null) {
+							setSuccessMessage('Review submitted successfully!');
+							await fetchItem();
+							setTimeout(() => {
+								setSuccessMessage(null);
+								setResetReviewForm(false);
+							}, 3000);
+						}
 					}
 				} else {
 					removeUser();
@@ -189,17 +191,20 @@ const ItemDetails: React.FC = () => {
 		rating: number;
 	}) => {
 		async function updateReview() {
-			if (currentReview && id !== undefined) {
-				await ReviewDataService.upsert(currentReview.itemId, {
-					...currentReview,
+			if (currentReview !== null && id !== undefined) {
+				const reviewResponse = await ReviewDataService.updateReview({
+					id: currentReview.id,
 					description: review.description,
 					rating: review.rating,
 				});
-				setSuccessMessage('Review updated successfully!');
-				setEditPopupVisible(false);
-				setTimeout(() => {
-					setSuccessMessage(null);
-				}, 3000);
+				if (reviewResponse !== null) {
+					setSuccessMessage('Review updated successfully!');
+					setEditPopupVisible(false);
+					fetchItem();
+					setTimeout(() => {
+						setSuccessMessage(null);
+					}, 3000);
+				}
 			}
 		}
 		updateReview();
@@ -209,12 +214,9 @@ const ItemDetails: React.FC = () => {
 		async function deleteReview() {
 			const result = await ReviewDataService.destroyOne({ id: review.id });
 
-			if (result.success) {
+			if (result !== null) {
 				setSuccessMessage('Review deleted successfully!');
-				setReviews(
-					(prevReviews) =>
-						prevReviews?.filter((r) => r.id !== review.id) || null
-				);
+				await fetchItem();
 				setTimeout(() => {
 					setSuccessMessage(null);
 				}, 3000);
@@ -223,7 +225,6 @@ const ItemDetails: React.FC = () => {
 			}
 		}
 		deleteReview();
-		console.log('delete review');
 	};
 
 	const reviewEndThingy = (review: Review, userId: string | null) => {
@@ -319,10 +320,7 @@ const ItemDetails: React.FC = () => {
 							setBuyHover(false);
 						}}
 					>
-						<button
-							className="buy-section"
-							onClick={handleSubmit}
-						>
+						<button className="buy-section" onClick={handleSubmit}>
 							Add to Cart
 						</button>
 						{buyHover === true ? (
@@ -342,10 +340,7 @@ const ItemDetails: React.FC = () => {
 						<h2 style={{ fontWeight: 'bold', marginBottom: '2rem' }}>
 							Leave a Review
 						</h2>
-						<ReviewForm
-							onSubmit={handleReviewSubmit}
-							reset={resetReviewForm}
-						/>
+						<ReviewForm onSubmit={handleReviewSubmit} reset={resetReviewForm} />
 						{successMessage && (
 							<div className="success-message">{successMessage}</div>
 						)}
@@ -356,10 +351,7 @@ const ItemDetails: React.FC = () => {
 				<h2 style={{ fontWeight: 'bold', textAlign: 'center' }}>Reviews</h2>
 				<div className="reviewContainer">
 					{reviews?.map((review, index) => (
-						<div
-							className="reviewItem"
-							key={index}
-						>
+						<div className="reviewItem" key={index}>
 							<p className="userName">{review.userName}</p>
 							<p className="reviewDesc">{review.description}</p>
 							<p className="reviewRating">

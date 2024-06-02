@@ -14,14 +14,16 @@ async function create(review: {
 	return response.data;
 }
 
-async function upsert(
-	id: string,
-	review: { description: string; rating: number }
-) {
+async function updateReview(review: {
+	id: string;
+	description: string;
+	rating: number;
+}) {
 	const response = await axios.post(
-		`${API_HOST}/api/reviews/upsert/${id}`,
+		API_HOST + '/api/reviews/updateReview/',
 		review
 	);
+
 	return response.data;
 }
 
@@ -58,7 +60,7 @@ async function destroyOne(review: { id: string }) {
 
 export default {
 	create,
-	upsert,
+	updateReview,
 	getByUUID,
 	getByItemId,
 	destroy,

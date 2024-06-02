@@ -10,7 +10,11 @@ module.exports = (express, app) => {
 
 	router.post('/create', controller.create);
 
+	router.post('/updateReview', controller.updateReview);
+
 	router.post('/destroy', controller.destroy);
+
+	router.post('/destroyOne', controller.destroyOne);
 
 	// Add routes to server.
 	app.use('/api/reviews', router);
