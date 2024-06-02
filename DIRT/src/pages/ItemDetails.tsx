@@ -4,7 +4,6 @@ import ItemDataService from '../data/ItemService';
 import UserDataService from '../data/UserService';
 import ReviewDataService from '../data/ReviewService';
 import FollowerDataService from '../data/FollowerService';
-import Footer from '../components/Footer';
 import ReviewForm from '../components/ReviewForm';
 import '../styles/ItemDetails.css';
 import { getUser, removeUser, editOrder } from '../data/repository';
@@ -29,6 +28,10 @@ interface Review {
 	isFollowing: boolean;
 }
 
+interface Fields {
+	quantity: string;
+}
+
 const ItemDetails: React.FC = () => {
 	const { id } = useParams<{ id: string }>(); // Item Id
 	const [item, setItem] = useState<Item | null>(null); // Current Item's Interface
@@ -40,22 +43,14 @@ const ItemDetails: React.FC = () => {
 	const [editPopupVisible, setEditPopupVisible] = useState<boolean>(false); // Controls the edit review popup
 	const [currentReview, setCurrentReview] = useState<Review | null>(null); // Get's the currently selected review
 	const [userId, setUserId] = useState<string | null>(null); // Get's the currently logged in user (if logged in)
-	const [fields, setFields] = useState({ quantity: '' }); // Input fields
+	const [fields, setFields] = useState<Fields>({ quantity: '' });
 
-	const handleInputChange = (event) => {
-		// Handles the input change of fields
-		const quantity: 'quantity' = event.target.name;
-		const value = event.target.value;
-
-		const temp = { quantity: fields.quantity };
-
-		if (+value <= 0) {
-			temp[quantity] = '1';
-		} else {
-			temp[quantity] = value;
-		}
-
-		setFields(temp);
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+		setFields((prevFields) => ({
+			...prevFields,
+			[name]: value <= '0' ? '1' : value,
+		}));
 	};
 
 	async function addToCart() {
@@ -83,9 +78,8 @@ const ItemDetails: React.FC = () => {
 		}
 	}
 
-	const handleSubmit = (event) => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-
 		addToCart();
 	};
 
@@ -431,22 +425,19 @@ const ItemDetails: React.FC = () => {
 							setBuyHover(false);
 						}}
 					>
-						<button
-							className="buy-section"
-							onClick={handleSubmit}
-						>
-							Add to Cart
-						</button>
-						{buyHover === true ? (
-							<input
-								type="number"
-								name="quantity"
-								style={{ maxWidth: '3rem' }}
-								value={fields.quantity}
-								onChange={handleInputChange}
-								placeholder="Qty"
-							></input>
-						) : null}
+						<form onSubmit={handleSubmit}>
+							<button className="buy-section">Add to cart</button>
+							{buyHover && (
+								<input
+									type="number"
+									name="quantity"
+									style={{ maxWidth: '3rem' }}
+									value={fields.quantity}
+									onChange={handleInputChange}
+									placeholder="Qty"
+								/>
+							)}
+						</form>
 					</div>
 				</div>
 				<div className="item-order-container">

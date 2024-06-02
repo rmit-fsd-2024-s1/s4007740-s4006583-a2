@@ -1,14 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-	getUser,
-	editOrder,
-	readAndGetOrder,
-	removeUser,
-} from '../data/repository';
+import { getUser, editOrder, removeUser } from '../data/repository';
 import UserDataService from '../data/UserService';
 import '../styles/ShopItem.css';
-import SignUpForm from './SignupForm';
 
 interface Props {
 	item_id: string;
@@ -19,6 +12,10 @@ interface Props {
 	special: boolean;
 }
 
+interface Fields {
+	quantity: string;
+}
+
 export default function ShopItem({
 	item_id = '',
 	item_name = '',
@@ -27,22 +24,14 @@ export default function ShopItem({
 	category = '',
 	special = false,
 }: Props) {
-	const [fields, setFields] = useState({ quantity: '' });
-	const [showSignIn, setShowSignIn] = useState(false);
+	const [fields, setFields] = useState<Fields>({ quantity: '' });
 
-	const handleInputChange = (event) => {
-		const quantity: 'quantity' = event.target.name;
-		const value = event.target.value;
-
-		const temp = { quantity: fields.quantity };
-
-		if (+value <= 0) {
-			temp[quantity] = '1';
-		} else {
-			temp[quantity] = value;
-		}
-
-		setFields(temp);
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+		setFields((prevFields) => ({
+			...prevFields,
+			[name]: value <= '0' ? '1' : value,
+		}));
 	};
 
 	async function addToCart() {
@@ -64,9 +53,8 @@ export default function ShopItem({
 		}
 	}
 
-	const handleSubmit = (event) => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-
 		addToCart();
 	};
 
@@ -87,7 +75,11 @@ export default function ShopItem({
 				}}
 			>
 				{special ? (
-					<img className="specialIcon" src="/special.png" alt="React Image" />
+					<img
+						className="specialIcon"
+						src="/special.png"
+						alt="React Image"
+					/>
 				) : null}
 				<img
 					className="card-img-top"
@@ -117,19 +109,19 @@ export default function ShopItem({
 							setBuyHover(false);
 						}}
 					>
-						<button onClick={handleSubmit} className="buy-button">
-							Add to cart
-						</button>
-						{buyHover === true ? (
-							<input
-								type="number"
-								name="quantity"
-								style={{ maxWidth: '3rem' }}
-								value={fields.quantity}
-								onChange={handleInputChange}
-								placeholder="Qty"
-							></input>
-						) : null}
+						<form onSubmit={handleSubmit}>
+							<button className="buy-button">Add to cart</button>
+							{buyHover && (
+								<input
+									type="number"
+									name="quantity"
+									style={{ maxWidth: '3rem' }}
+									value={fields.quantity}
+									onChange={handleInputChange}
+									placeholder="Qty"
+								/>
+							)}
+						</form>
 					</div>
 				</div>
 			</div>

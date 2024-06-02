@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 const USER_KEY = 'user';
 
 function readAndGetOrder(orderString: string) {
