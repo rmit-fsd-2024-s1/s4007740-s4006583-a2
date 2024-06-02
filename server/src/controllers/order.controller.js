@@ -12,7 +12,6 @@ exports.all = async (req, res) => {
 exports.create = async (req, res) => {
 	console.log(req.body.uuid);
 	const order = await db.order.create({
-		id: (await db.order.count()) + 1,
 		order: req.body.order,
 		userUuid: req.body.uuid,
 	});
