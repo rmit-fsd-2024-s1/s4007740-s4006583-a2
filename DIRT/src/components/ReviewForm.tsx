@@ -37,6 +37,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
+		const words = description.split(/\s+/); // Split description into words
+		const numWords = words.length;
+
 		if (!description) {
 			setError('Description is required.');
 			return;
@@ -47,7 +50,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 			return;
 		}
 
-		if (description.length > 200) {
+		if (numWords >= 100) {
 			setError('Description is too long');
 			return;
 		}
