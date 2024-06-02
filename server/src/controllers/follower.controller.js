@@ -11,7 +11,7 @@ exports.all = async (req, res) => {
 	}
 };
 
-// Create a follower in the database.
+// Create a follower in the database (Follow)
 exports.create = async (req, res) => {
 	try {
 		const { followerId, followeeId } = req.body;
@@ -45,6 +45,7 @@ exports.isFollowing = async (req, res) => {
 	}
 };
 
+// Remove a follower in the database (Unfollow)
 exports.deleteFollowRelationship = async (req, res) => {
 	try {
 		const { followerId, followeeId } = req.body;

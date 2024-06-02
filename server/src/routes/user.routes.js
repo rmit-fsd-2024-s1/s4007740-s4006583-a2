@@ -14,6 +14,7 @@ module.exports = (express, app) => {
 	// Verify login
 	router.get('/login', controller.login);
 
+	// Verify user details
 	router.get('/verify', controller.verify);
 
 	// Create a new user.
@@ -25,6 +26,7 @@ module.exports = (express, app) => {
 	// Update an existing user or add user if one doesn't exist
 	router.post('/upsert', controller.upsert);
 
+	// Update a users cart
 	router.post('/updateCart', controller.updateCart);
 
 	// Delete a user

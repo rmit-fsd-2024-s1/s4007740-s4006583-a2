@@ -35,21 +35,20 @@ interface Following {
 }
 
 const ItemDetails: React.FC = () => {
-	const { id } = useParams<{ id: string }>();
-	const [item, setItem] = useState<Item | null>(null);
-	const [reviews, setReviews] = useState<Review[] | null>(null);
-	const [loading, setLoading] = useState<boolean>(true);
-	const [error, setError] = useState<string | null>(null);
-	const [successMessage, setSuccessMessage] = useState<string | null>(null);
-	const [resetReviewForm, setResetReviewForm] = useState<boolean>(false);
-	const [editPopupVisible, setEditPopupVisible] = useState<boolean>(false);
-	const [currentReview, setCurrentReview] = useState<Review | null>(null);
-	const [userId, setUserId] = useState<string | null>(null);
-	const [fields, setFields] = useState({ quantity: '' });
-	const [showSignIn, setShowSignIn] = useState(false);
-	const [following, setFollowing] = useState<{ [key: string]: boolean }>({});
+	const { id } = useParams<{ id: string }>(); // Item Id
+	const [item, setItem] = useState<Item | null>(null); // Current Item's Interface
+	const [reviews, setReviews] = useState<Review[] | null>(null); // Reviews on Current Item (Interface)
+	const [loading, setLoading] = useState<boolean>(true); // Status
+	const [error, setError] = useState<string | null>(null); // Status
+	const [successMessage, setSuccessMessage] = useState<string | null>(null); // Status
+	const [resetReviewForm, setResetReviewForm] = useState<boolean>(false); // Whether to reset form or not
+	const [editPopupVisible, setEditPopupVisible] = useState<boolean>(false); // Controls the edit review popup
+	const [currentReview, setCurrentReview] = useState<Review | null>(null); // Get's the currently selected review
+	const [userId, setUserId] = useState<string | null>(null); // Get's the currently logged in user (if logged in)
+	const [fields, setFields] = useState({ quantity: '' }); // Input fields
 
 	const handleInputChange = (event) => {
+		// Handles the input change of fields
 		const quantity: 'quantity' = event.target.name;
 		const value = event.target.value;
 
@@ -65,20 +64,26 @@ const ItemDetails: React.FC = () => {
 	};
 
 	async function addToCart() {
-		const userInfo = getUser();
+		// Will add the current item to the cart
+		const userInfo = getUser(); // get's the current user's uuid
 		if (userInfo !== null) {
-			const user = await UserDataService.getUserFromUUID(userInfo);
+			// checks if logged in
+			const user = await UserDataService.getUserFromUUID(userInfo); // get's current user from database
 			if (user !== null) {
+				// checks if current user exists in database
 				await UserDataService.updateCart({
+					// updates the cart
 					uuid: userInfo,
 					cart: editOrder(user.cart, id!, fields.quantity),
 				});
 			} else {
+				// logs user out as user no longer exists
 				console.log('User no longer exists');
 				removeUser();
 				location.assign('/');
 			}
 		} else {
+			// prompts user to login
 			alert('User must be logged in first');
 		}
 	}
@@ -89,17 +94,19 @@ const ItemDetails: React.FC = () => {
 		addToCart();
 	};
 
-	const [buyHover, setBuyHover] = useState(false);
+	const [buyHover, setBuyHover] = useState(false); // check's if hovering over buy button
 
 	async function fetchItem() {
 		try {
+			// try's to get current item from database
 			const itemData = await ItemDataService.getOne(id!);
 			setItem(itemData);
 
-			const reviewData = await ReviewDataService.getByItemId(id!);
+			const reviewData = await ReviewDataService.getByItemId(id!); // get's reviews for current item
 
 			// Fetch usernames for each review
 			const reviewsWithUsernames = await Promise.all(
+				// Add's following data and the user who left the review's uuid
 				reviewData.map(async (review: { userUuid: string }) => {
 					const user = await UserDataService.getUserFromUUID(review.userUuid);
 					const isFollowing = await FollowerDataService.isFollowing(
@@ -119,16 +126,18 @@ const ItemDetails: React.FC = () => {
 			setReviews(reviewsWithUsernames);
 			setLoading(false);
 		} catch (err) {
-			setError('Failed to fetch item');
+			setError('Failed to fetch item: ' + err);
 			setLoading(false);
 		}
 	}
 
 	useEffect(() => {
+		// Will fetch the item data on refresh and on item id change
 		fetchItem();
 	}, [id]);
 
 	useEffect(() => {
+		// get's the current user
 		async function getUserInfo() {
 			const userInfo = getUser();
 			if (userInfo !== null) {
@@ -154,6 +163,7 @@ const ItemDetails: React.FC = () => {
 	}
 
 	const handleReviewSubmit = (review: {
+		// Add review to item
 		description: string;
 		rating: number;
 	}) => {
@@ -290,10 +300,6 @@ const ItemDetails: React.FC = () => {
 			alert('You need to be logged in to unfollow a user');
 		}
 	};
-
-	//   useEffect(() => {
-	// 	checkFollowing(id); // Pass the followeeId to the checkFollowing function
-	//   }, []);
 
 	const reviewEndThingy = (review: Review, userId: string | null) => {
 		if (review.userUuid === userId) {

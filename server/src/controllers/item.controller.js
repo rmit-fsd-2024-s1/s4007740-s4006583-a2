@@ -8,7 +8,7 @@ exports.all = async (req, res) => {
 	res.json(items);
 };
 
-// Select one user from the database.
+// Select one item from the database using an item's id
 exports.one = async (req, res) => {
 	const item = await db.item.findByPk(req.params.id);
 	if (item) {
@@ -18,36 +18,10 @@ exports.one = async (req, res) => {
 	}
 };
 
-// Select item from the database using cat.
+// Select item from the database using an item's category
 exports.getByCategory = async (req, res) => {
-	const item = await db.item.findAll({ where: { cat: req.params.cat } });
+	console.log('catfgwbufwqbeuh');
+	const items = await db.item.findAll({ where: { cat: req.query.test } });
 
-	res.json(item);
-};
-
-// Create a user in the database.
-exports.create = async (req, res) => {
-	const item = await db.item.create({
-		id: req.body.id,
-		name: req.body.name,
-		desc: req.body.desc,
-		cost: req.body.cost,
-		cat: req.body.cat,
-		special: req.body.special,
-	});
-
-	res.json(item);
-};
-
-exports.upsert = async (req, res) => {
-	const item = await db.item.upsert({
-		id: req.body.id,
-		name: req.body.name,
-		desc: req.body.desc,
-		cost: req.body.cost,
-		cat: req.body.cat,
-		special: req.body.special,
-	});
-
-	res.json(item);
+	res.json(items);
 };

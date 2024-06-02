@@ -34,7 +34,7 @@ db.item.hasMany(db.review, {
 	hooks: true,
 	foreignKey: { itemId: 'id', allowNull: false },
 });
-
+// Relate order with user
 db.order.belongsTo(db.user, {
 	foreignKey: { userUuid: 'uuid', allowNull: false },
 });
@@ -43,7 +43,7 @@ db.user.hasMany(db.order, {
 	hooks: true,
 	foreignKey: { userUuid: 'uuid', allowNull: false },
 });
-
+// relate users to other users in the following table
 db.user.belongsToMany(db.user, {
 	as: 'Followers',
 	through: 'follower',
@@ -72,13 +72,12 @@ db.sync = async () => {
 };
 
 async function seedData() {
-	const count = await db.user.count();
+	const count = await db.item.count();
 
 	// Only seed data if necessary.
-	// if (count > 0) return;
+	if (count > 0) return;
 
-	const argon2 = require('argon2');
-
+	// Will seed all the products
 	const product_list = [
 		{
 			id: 1,

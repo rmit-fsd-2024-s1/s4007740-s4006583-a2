@@ -14,19 +14,6 @@ async function getOne(id: string) {
 	return response.data;
 }
 
-// async function create(review: {
-// 	id: string;
-// 	desc: string;
-// 	rating: number;
-// 	date: string;
-// 	userUuid: string;
-// 	itemId: string;
-// }) {
-// 	const response = await axios.post(API_HOST + '/api/review/create', review);
-
-// 	return response.data;
-// }
-
 export default {
 	getAll,
 	getOne,

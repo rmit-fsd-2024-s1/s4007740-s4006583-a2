@@ -8,6 +8,9 @@ module.exports = (express, app) => {
 	// Select specific item with id
 	router.get('/:id', controller.one);
 
+	// Get items in categories
+	router.post('/getByCategory', controller.getByCategory);
+
 	// Add routes to server.
 	app.use('/api/items', router);
 };

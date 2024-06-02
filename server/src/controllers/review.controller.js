@@ -20,6 +20,7 @@ exports.create = async (req, res) => {
 	res.json(review);
 };
 
+// Update a review in the database.
 exports.updateReview = async (req, res) => {
 	const review = await db.review.findByPk(req.body.id);
 
@@ -32,6 +33,7 @@ exports.updateReview = async (req, res) => {
 	res.json(review);
 };
 
+// Get reviews made by a certain user
 exports.getByUUID = async (req, res) => {
 	const review = await db.review.findAll({
 		where: { userUuid: req.params.uuid },
@@ -40,6 +42,7 @@ exports.getByUUID = async (req, res) => {
 	res.json(review);
 };
 
+// Get reviews on a certain item
 exports.getByItemId = async (req, res) => {
 	const review = await db.review.findAll({
 		where: { itemId: req.params.itemId },
@@ -48,6 +51,7 @@ exports.getByItemId = async (req, res) => {
 	res.json(review);
 };
 
+// Remove reviews from the table made by a user
 exports.destroy = async (req, res) => {
 	const review = await db.review.destroy({
 		where: { userUuid: req.body.uuid },
@@ -56,6 +60,7 @@ exports.destroy = async (req, res) => {
 	res.json(review);
 };
 
+// Remove a specific review based on it's own id
 exports.destroyOne = async (req, res) => {
 	const review = await db.review.destroy({
 		where: { id: req.body.id },

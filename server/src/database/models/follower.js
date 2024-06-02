@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) =>
 		'follower',
 		{
 			followerId: {
+				// the uuid of the follower
 				type: DataTypes.UUID,
 				allowNull: false,
 				references: {
@@ -11,6 +12,7 @@ module.exports = (sequelize, DataTypes) =>
 				},
 			},
 			followeeId: {
+				// the uuid of the followee
 				type: DataTypes.UUID,
 				allowNull: false,
 				references: {

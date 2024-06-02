@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) =>
 		'order',
 		{
 			order: {
+				// The details of the order
 				type: DataTypes.STRING(250),
 			},
 		},

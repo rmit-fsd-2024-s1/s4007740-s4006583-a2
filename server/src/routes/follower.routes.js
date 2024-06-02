@@ -8,6 +8,7 @@ module.exports = (express, app) => {
 	// Create a follower.
 	router.post('/api/following/create', controller.create);
 
+	// Unfollow a user
 	router.post(
 		'/api/following/deleteFollowRelationship',
 		controller.deleteFollowRelationship
