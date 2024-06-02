@@ -16,6 +16,7 @@ db.user = require('./models/user.js')(db.sequelize, DataTypes);
 db.item = require('./models/item.js')(db.sequelize, DataTypes);
 db.order = require('./models/order.js')(db.sequelize, DataTypes);
 db.review = require('./models/review.js')(db.sequelize, DataTypes);
+db.follower = require('./models/follower.js')(db.sequelize, DataTypes);
 
 // Relate review with item and user.
 db.review.belongsTo(db.user, {
@@ -41,6 +42,20 @@ db.order.belongsTo(db.user, {
 db.user.hasMany(db.order, {
 	hooks: true,
 	foreignKey: { userUuid: 'uuid', allowNull: false },
+});
+
+db.user.belongsToMany(db.user, {
+	as: 'Followers',
+	through: 'follower',
+	foreignKey: 'followeeId',
+	otherKey: 'followerId',
+});
+
+db.user.belongsToMany(db.user, {
+	as: 'Following',
+	through: 'follower',
+	foreignKey: 'followerId',
+	otherKey: 'followeeId',
 });
 
 // Learn more about associations here: https://sequelize.org/master/manual/assocs.html
