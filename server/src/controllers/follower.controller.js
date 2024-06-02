@@ -44,3 +44,16 @@ exports.isFollowing = async (req, res) => {
 		res.status(500).json({ success: false, message: 'Internal server error' });
 	}
 };
+
+exports.deleteFollowRelationship = async (req, res) => {
+	try {
+		const { followerId, followeeId } = req.body;
+		const following = await db.follower.destroy({
+			where: { followeeId: followerId, followeeId: followeeId },
+		});
+		res.status(201).json(following);
+	} catch (error) {
+		console.error('Error creating follow relationship:', error);
+		res.status(500).json({ success: false, message: 'Internal server error' });
+	}
+};

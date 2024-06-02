@@ -11,6 +11,18 @@ async function create(following: { followerId: string; followeeId: string }) {
 	return response.data;
 }
 
+async function deleteFollowRelationship(follwing: {
+	followerId: string;
+	followeeId: string;
+}) {
+	const response = await axios.post(
+		API_HOST + '/api/following/deleteFollowRelationship',
+		follwing
+	);
+
+	return response.data;
+}
+
 async function isFollowing(followerId: string, followeeId: string) {
 	const response = await axios.get(
 		`${API_HOST}/api/following/status/${followerId}/${followeeId}`
@@ -20,5 +32,6 @@ async function isFollowing(followerId: string, followeeId: string) {
 
 export default {
 	create,
+	deleteFollowRelationship,
 	isFollowing,
 };

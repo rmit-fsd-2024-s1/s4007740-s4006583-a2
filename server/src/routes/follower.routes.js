@@ -8,6 +8,11 @@ module.exports = (express, app) => {
 	// Create a follower.
 	router.post('/api/following/create', controller.create);
 
+	router.post(
+		'/api/following/deleteFollowRelationship',
+		controller.deleteFollowRelationship
+	);
+
 	// Check if a user is following another user
 	router.get(
 		'/api/following/status/:followerId/:followeeId',

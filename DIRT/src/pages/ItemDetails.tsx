@@ -266,6 +266,31 @@ const ItemDetails: React.FC = () => {
 		}
 	};
 
+	const handleUnfollowButtonClick = async (followeeId: string) => {
+		const userInfo = getUser();
+		if (userInfo !== null) {
+			const followerId = userInfo;
+			try {
+				const followingResponse =
+					await FollowerDataService.deleteFollowRelationship({
+						followerId,
+						followeeId,
+					});
+				if (followingResponse !== null) {
+					setSuccessMessage('User unfollowed successfully!');
+					fetchItem();
+					setTimeout(() => {
+						setSuccessMessage(null);
+					}, 3000);
+				}
+			} catch (error) {
+				setError('Failed to unfollow user');
+			}
+		} else {
+			alert('You need to be logged in to unfollow a user');
+		}
+	};
+
 	//   useEffect(() => {
 	// 	checkFollowing(id); // Pass the followeeId to the checkFollowing function
 	//   }, []);
@@ -296,10 +321,10 @@ const ItemDetails: React.FC = () => {
 				return (
 					<button
 						className="review-btn"
-						style={{ borderColor: '#218838', color: '#218838' }}
-						// onClick={() => handleFollowButtonClick(review.userUuid)}
+						style={{ borderColor: 'red', color: 'red' }}
+						onClick={() => handleUnfollowButtonClick(review.userUuid)}
 					>
-						Following
+						Unfollow
 					</button>
 				);
 			}
