@@ -255,7 +255,28 @@ const ItemDetails: React.FC = () => {
 		}
 	};
 
-	const reviewEndThingy = (review: Review, userId: string | null) => {
+	const checkFollowing = async (followeeId: string) => {
+		const userInfo = getUser();
+		if (userInfo !== null) {
+			const followerId = userInfo;
+			try {
+				const isFollowingResponse = await FollowerService.isFollowing({
+					followerId,
+					followeeId,
+				});
+				return isFollowingResponse;
+			} catch {
+				alert('You need to be logged in to follow a user');
+				return false; // Return false if user is not logged in
+			}
+		}
+	};
+
+	//   useEffect(() => {
+	// 	checkFollowing(id); // Pass the followeeId to the checkFollowing function
+	//   }, []);
+
+	const reviewEndThingy = async (review: Review, userId: string | null) => {
 		if (review.userUuid === userId) {
 			return (
 				<>
@@ -276,15 +297,29 @@ const ItemDetails: React.FC = () => {
 				</>
 			);
 		}
-		return (
-			<button
-				className="review-btn"
-				style={{ borderColor: '#218838', color: '#218838' }}
-				onClick={() => handleFollowButtonClick(review.userUuid)}
-			>
-				Follow User
-			</button>
-		);
+		if (userId !== null) {
+			const isFollowing = await checkFollowing(review.userUuid);
+			if (isFollowing) {
+				return (
+					<button
+						className="review-btn"
+						style={{ borderColor: '#218838', color: '#218838' }}
+						// onClick={() => handleFollowButtonClick(review.userUuid)}
+					>
+						Following
+					</button>
+				);
+			}
+			return (
+				<button
+					className="review-btn"
+					style={{ borderColor: '#218838', color: '#218838' }}
+					onClick={() => handleFollowButtonClick(review.userUuid)}
+				>
+					Follow User
+				</button>
+			);
+		}
 	};
 
 	const backButton = () => {
@@ -348,7 +383,10 @@ const ItemDetails: React.FC = () => {
 							setBuyHover(false);
 						}}
 					>
-						<button className="buy-section" onClick={handleSubmit}>
+						<button
+							className="buy-section"
+							onClick={handleSubmit}
+						>
 							Add to Cart
 						</button>
 						{buyHover === true ? (
@@ -368,7 +406,10 @@ const ItemDetails: React.FC = () => {
 						<h2 style={{ fontWeight: 'bold', marginBottom: '2rem' }}>
 							Leave a Review
 						</h2>
-						<ReviewForm onSubmit={handleReviewSubmit} reset={resetReviewForm} />
+						<ReviewForm
+							onSubmit={handleReviewSubmit}
+							reset={resetReviewForm}
+						/>
 						{successMessage && (
 							<div className="success-message">{successMessage}</div>
 						)}
@@ -379,7 +420,10 @@ const ItemDetails: React.FC = () => {
 				<h2 style={{ fontWeight: 'bold', textAlign: 'center' }}>Reviews</h2>
 				<div className="reviewContainer">
 					{reviews?.map((review, index) => (
-						<div className="reviewItem" key={index}>
+						<div
+							className="reviewItem"
+							key={index}
+						>
 							<p className="userName">{review.userName}</p>
 							<p className="reviewDesc">{review.description}</p>
 							<p className="reviewRating">
