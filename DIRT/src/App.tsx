@@ -8,9 +8,6 @@ import Products from './pages/Products';
 import NavBar from './components/NavBar';
 import ShoppingCart from './pages/ShoppingCart';
 import ItemDetails from './pages/ItemDetails';
-import { useEffect, useState } from 'react';
-
-import { Nav } from 'react-bootstrap';
 
 export default function App() {
 	return (
@@ -20,8 +17,14 @@ export default function App() {
 					<div>
 						<NavBar />
 						<Routes>
-							<Route path="/" element={<Home />} />
-							<Route path="/Profile" element={<ProfilePage />} />
+							<Route
+								path="/"
+								element={<Home />}
+							/>
+							<Route
+								path="/Profile"
+								element={<ProfilePage />}
+							/>
 							<Route
 								path="/Profile/EditProfile"
 								element={
@@ -38,9 +41,18 @@ export default function App() {
 									</ProfilePage>
 								}
 							/>
-							<Route path="/products" element={<Products />} />
-							<Route path="/ShoppingCart" element={<ShoppingCart />} />
-							<Route path="/products/item/:id" element={<ItemDetails />} />
+							<Route
+								path="/products"
+								element={<Products />}
+							/>
+							<Route
+								path="/ShoppingCart"
+								element={<ShoppingCart />}
+							/>
+							<Route
+								path="/products/item/:id"
+								element={<ItemDetails />}
+							/>
 						</Routes>
 					</div>
 				</main>

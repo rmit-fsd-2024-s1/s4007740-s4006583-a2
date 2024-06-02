@@ -22,9 +22,14 @@ export default function ShoppingCart() {
 
 	const [total, setTotal] = useState(0);
 
-	const handleInputChange = (event) => {
-		const name: 'number' | 'dateMonth' | 'dateYear' | 'cvc' = event.target.name;
-		let value = event.target.value;
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const name = event.target.name as
+			| 'number'
+			| 'dateMonth'
+			| 'dateYear'
+			| 'cvc'; // Type assertion
+
+		let value = parseInt(event.target.value, 10); // Convert value to number
 
 		const temp = {
 			number: fields.number,
@@ -35,12 +40,12 @@ export default function ShoppingCart() {
 
 		if (name === 'dateMonth') {
 			if (value <= 0) {
-				value = '01';
+				value = 1; // Set minimum value
 			} else if (value > 12) {
-				value = '12';
+				value = 12; // Set maximum value
 			}
 		}
-		temp[name] = value;
+		temp[name] = value.toString(); // Convert value back to string before assigning
 		setFields(temp);
 	};
 
@@ -74,10 +79,10 @@ export default function ShoppingCart() {
 		}
 	}
 
-	const handleSubmit = (event) => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		if (cart.length != 0) {
+		if (cart.length !== 0) {
 			if (
 				fields.number.length === 16 &&
 				!isNaN(+fields.number) &&
@@ -290,11 +295,15 @@ export default function ShoppingCart() {
 								value={fields.cvc}
 							></input>
 						</div>
-						<div>
-							<button className="btn btn-success" onClick={handleSubmit}>
+						<form onSubmit={handleSubmit}>
+							{/* other form inputs */}
+							<button
+								type="submit"
+								className="btn btn-success"
+							>
 								Pay
 							</button>
-						</div>
+						</form>
 					</div>
 				</div>
 			</div>

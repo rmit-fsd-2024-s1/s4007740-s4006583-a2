@@ -1,6 +1,6 @@
-import React, { CSSProperties, useEffect, useState, useRef } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 import '../styles/Footer.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 {
 	/*Checks whether page content height is less than screen hight.
