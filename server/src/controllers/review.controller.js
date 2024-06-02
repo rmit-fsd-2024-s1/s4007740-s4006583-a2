@@ -8,7 +8,6 @@ exports.all = async (req, res) => {
 
 // Create a review in the database.
 exports.create = async (req, res) => {
-	console.log(req.body);
 	const review = await db.review.create({
 		id: (await db.review.count()) + 1,
 		description: req.body.description,
@@ -17,6 +16,18 @@ exports.create = async (req, res) => {
 		userUuid: req.body.userUuid,
 		itemId: req.body.itemId,
 	});
+
+	res.json(review);
+};
+
+exports.updateReview = async (req, res) => {
+	const review = await db.review.findByPk(req.body.id);
+
+	if (review !== null) {
+		review.description = req.body.description;
+		review.rating = req.body.rating;
+		await review.save();
+	}
 
 	res.json(review);
 };
