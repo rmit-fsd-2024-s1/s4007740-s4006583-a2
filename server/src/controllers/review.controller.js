@@ -9,7 +9,6 @@ exports.all = async (req, res) => {
 // Create a review in the database.
 exports.create = async (req, res) => {
 	const review = await db.review.create({
-		id: (await db.review.count()) + 1,
 		description: req.body.description,
 		rating: req.body.rating,
 		date: req.body.date,

@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) =>
 				// the reviews id
 				type: DataTypes.INTEGER,
 				primaryKey: true,
+				autoIncrement: true,
 			},
 			description: {
 				// the reviews description
