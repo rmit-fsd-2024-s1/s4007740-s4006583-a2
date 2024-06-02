@@ -22,3 +22,25 @@ exports.create = async (req, res) => {
 		res.status(500).json({ success: false, message: 'Internal server error' });
 	}
 };
+
+// Check if a user is following another user
+exports.isFollowing = async (req, res) => {
+	try {
+		const { followerId, followeeId } = req.params;
+		const following = await db.follower.findOne({
+			where: {
+				followerId,
+				followeeId,
+			},
+		});
+
+		if (following) {
+			res.json({ isFollowing: true });
+		} else {
+			res.json({ isFollowing: false });
+		}
+	} catch (error) {
+		console.error('Error checking following status:', error);
+		res.status(500).json({ success: false, message: 'Internal server error' });
+	}
+};

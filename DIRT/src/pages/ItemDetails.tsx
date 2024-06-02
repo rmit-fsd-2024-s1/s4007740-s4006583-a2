@@ -46,6 +46,7 @@ const ItemDetails: React.FC = () => {
 	const [userId, setUserId] = useState<string | null>(null);
 	const [fields, setFields] = useState({ quantity: '' });
 	const [showSignIn, setShowSignIn] = useState(false);
+	const [following, setFollowing] = useState<{ [key: string]: boolean }>({});
 
 	const handleInputChange = (event) => {
 		const quantity: 'quantity' = event.target.name;
@@ -247,8 +248,6 @@ const ItemDetails: React.FC = () => {
 				}, 3000);
 			} catch (error) {
 				setError('Failed to follow user');
-				console.log(followeeId);
-				console.log(followerId);
 			}
 		} else {
 			alert('You need to be logged in to follow a user');

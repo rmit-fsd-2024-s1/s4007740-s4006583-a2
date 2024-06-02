@@ -11,6 +11,14 @@ async function create(following: { followerId: string; followeeId: string }) {
 	return response.data;
 }
 
+async function isFollowing(followerId: string, followeeId: string) {
+	const response = await axios.get(
+		`${API_HOST}/api/following/status/${followerId}/${followeeId}`
+	);
+	return response.data.isFollowing;
+}
+
 export default {
 	create,
+	isFollowing,
 };
