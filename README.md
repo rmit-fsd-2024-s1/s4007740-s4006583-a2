@@ -1,8 +1,8 @@
-# s4007740-s4006583-a1
+# s4007740-s4006583-a2
 
 SOIL - a food grocer website
 
-gitHub URL link: https://github.com/rmit-fsd-2024-s1/s4007740-s4006583-a1.git
+gitHub URL link: https://github.com/rmit-fsd-2024-s1/s4007740-s4006583-a2.git
 
 ## Users are able to:
 

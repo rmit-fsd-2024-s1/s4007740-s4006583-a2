@@ -382,6 +382,7 @@ const ItemDetails: React.FC = () => {
 					className="back-arrow"
 					viewBox="0 0 16 16"
 					onClick={backButton}
+					style={{ cursor: 'pointer' }}
 				>
 					<path
 						fillRule="evenodd"

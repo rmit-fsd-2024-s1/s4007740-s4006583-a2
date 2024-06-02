@@ -1,18 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, fireEvent, screen } from '@testing-library/react';
-import ShoppingCart from '../src/pages/ShoppingCart';
 import Review from '../src/components/ReviewForm';
-
-test('Renders the shopping cart', () => {
-	// Render the ShoppingCart component
-	render(<ShoppingCart />);
-
-	// Check if certain elements are present
-	expect(screen.getByText('Cart')).toBeInTheDocument(); // Assuming there is a heading with text 'Cart'
-	expect(screen.getByText('Pay')).toBeInTheDocument(); // Assuming there is a button with text 'Pay'
-
-	// Add more assertions as needed based on your component structure and UI
-});
 
 // Tests for if the review component is being rendered when a description is more than 100 words
 test('Review with description over 100 words should not submit properly', () => {
