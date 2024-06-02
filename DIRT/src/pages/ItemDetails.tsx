@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import ItemDataService from '../data/ItemService';
 import UserDataService from '../data/UserService';
 import ReviewDataService from '../data/ReviewService';
+import FollowerService from '../data/FollowerService';
 import Footer from '../components/Footer';
 import ReviewForm from '../components/ReviewForm';
 import '../styles/ItemDetails.css';
@@ -25,6 +26,11 @@ interface Review {
 	userUuid: string;
 	userName?: string;
 	itemId: string;
+}
+
+interface Following {
+	followerId: string;
+	followeeId: string;
 }
 
 const ItemDetails: React.FC = () => {
@@ -227,6 +233,29 @@ const ItemDetails: React.FC = () => {
 		deleteReview();
 	};
 
+	const handleFollowButtonClick = async (followeeId: string) => {
+		const userInfo = getUser();
+		if (userInfo !== null) {
+			const followerId = userInfo;
+			try {
+				await FollowerService.create({
+					followerId,
+					followeeId,
+				});
+				setSuccessMessage('User followed successfully!');
+				setTimeout(() => {
+					setSuccessMessage(null);
+				}, 3000);
+			} catch (error) {
+				setError('Failed to follow user');
+				console.log(followeeId);
+				console.log(followerId);
+			}
+		} else {
+			alert('You need to be logged in to follow a user');
+		}
+	};
+
 	const reviewEndThingy = (review: Review, userId: string | null) => {
 		if (review.userUuid === userId) {
 			return (
@@ -252,7 +281,7 @@ const ItemDetails: React.FC = () => {
 			<button
 				className="review-btn"
 				style={{ borderColor: '#218838', color: '#218838' }}
-				onClick={() => handleDeleteButtonClick(review)}
+				onClick={() => handleFollowButtonClick(review.userUuid)}
 			>
 				Follow User
 			</button>
