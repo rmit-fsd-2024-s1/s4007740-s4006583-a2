@@ -59,7 +59,6 @@ export default function products() {
 	} else {
 		filteredProducts = categoryFilteredProducts;
 	}
-	//AAKLJAHGFIU WHY WONT THIS WORK. Fix such that filter works
 
 	return (
 		<>

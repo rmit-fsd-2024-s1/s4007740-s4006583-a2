@@ -29,11 +29,6 @@ interface Review {
 	isFollowing: boolean;
 }
 
-interface Following {
-	followerId: string;
-	followeeId: string;
-}
-
 const ItemDetails: React.FC = () => {
 	const { id } = useParams<{ id: string }>(); // Item Id
 	const [item, setItem] = useState<Item | null>(null); // Current Item's Interface
@@ -162,6 +157,7 @@ const ItemDetails: React.FC = () => {
 		return <div>No item found</div>;
 	}
 
+	//Handles submission of reviews
 	const handleReviewSubmit = (review: {
 		// Add review to item
 		description: string;
@@ -211,6 +207,7 @@ const ItemDetails: React.FC = () => {
 		setEditPopupVisible(true);
 	};
 
+	//Logic for edit review - it also displays the current review so it is easier for user to edit
 	const handleEditSubmit = (review: {
 		description: string;
 		rating: number;
@@ -234,7 +231,7 @@ const ItemDetails: React.FC = () => {
 		}
 		updateReview();
 	};
-
+	//Logic for handling delete review
 	const handleDeleteButtonClick = (review: Review) => {
 		async function deleteReview() {
 			const result = await ReviewDataService.destroyOne({ id: review.id });
@@ -275,7 +272,7 @@ const ItemDetails: React.FC = () => {
 			alert('You need to be logged in to follow a user');
 		}
 	};
-
+	//Logic for handling the unfollow request
 	const handleUnfollowButtonClick = async (followeeId: string) => {
 		const userInfo = getUser();
 		if (userInfo !== null) {
@@ -300,7 +297,7 @@ const ItemDetails: React.FC = () => {
 			alert('You need to be logged in to unfollow a user');
 		}
 	};
-
+	//Adds either an edit and delete button for user reviews or a follow and unfollow button for other user reviews
 	const reviewEndThingy = (review: Review, userId: string | null) => {
 		if (review.userUuid === userId) {
 			return (
@@ -345,11 +342,12 @@ const ItemDetails: React.FC = () => {
 			);
 		}
 	};
-
+	//Allows users to return back to products page
 	const backButton = () => {
 		window.location.href = `/products`;
 	};
 
+	//Checks whether reviews exist in order to display appropriate message
 	const displayReview = () => {
 		if (reviews && reviews.length > 0) {
 			return (
@@ -375,7 +373,7 @@ const ItemDetails: React.FC = () => {
 			return <p style={{ textAlign: 'center' }}>No Reviews</p>;
 		}
 	};
-
+	//To output special characters on the frontend
 	const leftParen = '(';
 	const rightParen = ')';
 
