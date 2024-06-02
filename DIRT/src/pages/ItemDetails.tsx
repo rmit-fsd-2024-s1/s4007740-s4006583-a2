@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import ItemDataService from '../data/ItemService';
 import UserDataService from '../data/UserService';
 import ReviewDataService from '../data/ReviewService';
-import FollowerService from '../data/FollowerService';
+import FollowerDataService from '../data/FollowerService';
 import Footer from '../components/Footer';
 import ReviewForm from '../components/ReviewForm';
 import '../styles/ItemDetails.css';
@@ -26,6 +26,7 @@ interface Review {
 	userUuid: string;
 	userName?: string;
 	itemId: string;
+	isFollowing: boolean;
 }
 
 interface Following {
@@ -101,10 +102,17 @@ const ItemDetails: React.FC = () => {
 			const reviewsWithUsernames = await Promise.all(
 				reviewData.map(async (review: { userUuid: string }) => {
 					const user = await UserDataService.getUserFromUUID(review.userUuid);
-					return {
-						...review,
-						userName: user.name, // Assuming the user object has a name property
-					};
+					const isFollowing = await FollowerDataService.isFollowing(
+						getUser()!,
+						review.userUuid
+					);
+					if (user !== null && isFollowing !== null) {
+						return {
+							...review,
+							userName: user.name, // Assuming the user object has a name property
+							isFollowing: isFollowing,
+						};
+					}
 				})
 			);
 
@@ -239,14 +247,17 @@ const ItemDetails: React.FC = () => {
 		if (userInfo !== null) {
 			const followerId = userInfo;
 			try {
-				await FollowerService.create({
+				const followingResponse = await FollowerDataService.create({
 					followerId,
 					followeeId,
 				});
-				setSuccessMessage('User followed successfully!');
-				setTimeout(() => {
-					setSuccessMessage(null);
-				}, 3000);
+				if (followingResponse !== null) {
+					setSuccessMessage('User followed successfully!');
+					fetchItem();
+					setTimeout(() => {
+						setSuccessMessage(null);
+					}, 3000);
+				}
 			} catch (error) {
 				setError('Failed to follow user');
 			}
@@ -255,28 +266,11 @@ const ItemDetails: React.FC = () => {
 		}
 	};
 
-	const checkFollowing = async (followeeId: string) => {
-		const userInfo = getUser();
-		if (userInfo !== null) {
-			const followerId = userInfo;
-			try {
-				const isFollowingResponse = await FollowerService.isFollowing({
-					followerId,
-					followeeId,
-				});
-				return isFollowingResponse;
-			} catch {
-				alert('You need to be logged in to follow a user');
-				return false; // Return false if user is not logged in
-			}
-		}
-	};
-
 	//   useEffect(() => {
 	// 	checkFollowing(id); // Pass the followeeId to the checkFollowing function
 	//   }, []);
 
-	const reviewEndThingy = async (review: Review, userId: string | null) => {
+	const reviewEndThingy = (review: Review, userId: string | null) => {
 		if (review.userUuid === userId) {
 			return (
 				<>
@@ -298,8 +292,7 @@ const ItemDetails: React.FC = () => {
 			);
 		}
 		if (userId !== null) {
-			const isFollowing = await checkFollowing(review.userUuid);
-			if (isFollowing) {
+			if (review.isFollowing) {
 				return (
 					<button
 						className="review-btn"
@@ -383,10 +376,7 @@ const ItemDetails: React.FC = () => {
 							setBuyHover(false);
 						}}
 					>
-						<button
-							className="buy-section"
-							onClick={handleSubmit}
-						>
+						<button className="buy-section" onClick={handleSubmit}>
 							Add to Cart
 						</button>
 						{buyHover === true ? (
@@ -406,10 +396,7 @@ const ItemDetails: React.FC = () => {
 						<h2 style={{ fontWeight: 'bold', marginBottom: '2rem' }}>
 							Leave a Review
 						</h2>
-						<ReviewForm
-							onSubmit={handleReviewSubmit}
-							reset={resetReviewForm}
-						/>
+						<ReviewForm onSubmit={handleReviewSubmit} reset={resetReviewForm} />
 						{successMessage && (
 							<div className="success-message">{successMessage}</div>
 						)}
@@ -420,10 +407,7 @@ const ItemDetails: React.FC = () => {
 				<h2 style={{ fontWeight: 'bold', textAlign: 'center' }}>Reviews</h2>
 				<div className="reviewContainer">
 					{reviews?.map((review, index) => (
-						<div
-							className="reviewItem"
-							key={index}
-						>
+						<div className="reviewItem" key={index}>
 							<p className="userName">{review.userName}</p>
 							<p className="reviewDesc">{review.description}</p>
 							<p className="reviewRating">
